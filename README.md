@@ -1,1 +1,1 @@
-# Statistics and Econometircs
+# Statistics and Econometrics
