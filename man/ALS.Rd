@@ -2,7 +2,7 @@
 % Please edit documentation in R/ALS.R
 \name{ALS}
 \alias{ALS}
-\title{Implementation for Alternating Least Square (ALS) algorithm in HMCFA}
+\title{Implementation for Alternating Least Square (ALS) algorithm in HOFA}
 \usage{
 ALS(X, method = c("HFA3", "HFA4"), gamma, rh, rg, rmax = 8, eps = 10^-8, ...)
 }
@@ -22,19 +22,19 @@ ALS(X, method = c("HFA3", "HFA4"), gamma, rh, rg, rmax = 8, eps = 10^-8, ...)
 
 \item{eps}{The iteration error, default to 10^-8}
 
-\item{...}{Any other passthru parameters}
+\item{...}{Any other parameters}
 }
 \value{
 Estimated factors, factor loadings and commmon components.
 }
 \description{
-Implementation for Alternating Least Square (ALS) algorithm in HFA
+Implementation for Alternating Least Square (ALS) algorithm in HOFA
 }
 \examples{
-n = 20;t = 100;k = 2;msig_e = 7;
+n = 100;t = 200;k = 2;msig_e = 7;
 par_f = c(0.5,0,2,2,Inf,Inf);
 par_e = c(1,0,2,Inf,0,0,0);
 rho_ar = c(0.5,0.2);
-data = SimHFA(n,t,k,par_f,par_e,rho_ar,msig_e)$X;
+data = SimHOFA(n,t,k,par_f,par_e,rho_ar,msig_e)$X;
 ALS(data,method = "HFA3", gamma = c(1,1),rh = 1, rg = 1)
 }

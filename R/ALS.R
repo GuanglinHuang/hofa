@@ -1,4 +1,5 @@
-#' Implementation for Alternating Least Square (ALS) algorithm in HFA
+#' Implementation for Alternating Least Square (ALS) algorithm in HOFA
+#'
 #'
 #' @param X A matrix or data frame with t rows (samples) and n columns (variables).
 #' @param method Algorithm to use: "\code{HFA3}" to estimate factors by third-order multi-cumulant,
@@ -15,7 +16,7 @@
 #' par_f = c(0.5,0,2,2,Inf,Inf);
 #' par_e = c(1,0,2,Inf,0,0,0);
 #' rho_ar = c(0.5,0.2);
-#' data = SimHFA(n,t,k,par_f,par_e,rho_ar,msig_e)$X;
+#' data = SimHOFA(n,t,k,par_f,par_e,rho_ar,msig_e)$X;
 #' ALS(data,method = "HFA3", gamma = c(1,1),rh = 1, rg = 1)
 
 ALS = function(X,method =c("HFA3","HFA4"),gamma,rh,rg,
