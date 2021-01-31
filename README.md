@@ -1,1 +1,1 @@
-# Statistics and Econometrics
+# Higher-order Multi-Cumulant Factor Analysis
