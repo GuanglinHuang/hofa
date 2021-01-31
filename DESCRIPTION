@@ -1,0 +1,17 @@
+Package: HFA
+Type: Package
+Title: Higher-order multi-cumulant Factor Analysis
+Version: 0.1.0
+Author: Guanglin Huang
+Maintainer: Guanglin Huang <guanglin.huang@vub.be>
+Description: Implements the paper "Higher-order multi-cumulant factor analysis" for performing factors estimation and factors selection.
+    Use four spaces when indenting paragraphs within the Description.
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+Imports: dplyr, sgt, PerformanceAnalytics, ica, timeSeries, fGarch,
+        tensr, ggplot2, multDM
+Depends: R (>= 2.10)
+RoxygenNote: 7.1.1
+NeedsCompilation: no
+Packaged: 2021-01-18 20:25:03 UTC; HGL
