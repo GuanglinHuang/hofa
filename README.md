@@ -1,1 +1,1 @@
-# An implementation of Higher-order multi-cumulant Factor Analysis (HFA)
+# An implementation of Higher-order Multi-Cumulant Factor Analysis (HMCFA)
