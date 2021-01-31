@@ -2,7 +2,7 @@
 % Please edit documentation in R/ALS.R
 \name{ALS}
 \alias{ALS}
-\title{Implementation for Alternating Least Square (ALS) algorithm in HFA}
+\title{Implementation for Alternating Least Square (ALS) algorithm in HMCFA}
 \usage{
 ALS(X, method = c("HFA3", "HFA4"), gamma, rh, rg, rmax = 8, eps = 10^-8, ...)
 }

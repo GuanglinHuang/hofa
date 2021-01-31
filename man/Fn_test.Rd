@@ -2,7 +2,7 @@
 % Please edit documentation in R/Fn_test.R
 \name{Fn_test}
 \alias{Fn_test}
-\title{Determine the number of non-Gaussian and Gaussian factors}
+\title{Determine the number of non-Gaussian and Gaussian factors in HMCFA}
 \usage{
 Fn_test(
   X,

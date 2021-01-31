@@ -8,10 +8,10 @@
 #' @param rg The number of Gaussian factors
 #' @param rmax The maximum number of factors
 #' @param eps The iteration error, default to 10^-8
-#' @param ... Any other passthru parameters
+#' @param ... Any other parameters
 #' @return Estimated factors, factor loadings and commmon components.
 #' @examples
-#' n = 20;t = 100;k = 2;msig_e = 7;
+#' n = 100;t = 200;k = 2;msig_e = 7;
 #' par_f = c(0.5,0,2,2,Inf,Inf);
 #' par_e = c(1,0,2,Inf,0,0,0);
 #' rho_ar = c(0.5,0.2);

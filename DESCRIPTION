@@ -1,6 +1,6 @@
-Package: HFA
+Package: HMCFA
 Type: Package
-Title: Higher-order multi-cumulant Factor Analysis
+Title: Higher-order Multi-Cumulant Factor Analysis
 Version: 0.1.0
 Author: Guanglin Huang
 Maintainer: Guanglin Huang <guanglin.huang@vub.be>
@@ -13,5 +13,7 @@ Imports: dplyr, sgt, PerformanceAnalytics, ica, timeSeries, fGarch,
         tensr, ggplot2, multDM
 Depends: R (>= 2.10)
 RoxygenNote: 7.1.1
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2021-01-18 20:25:03 UTC; HGL
+Packaged: 2021-01-31 18:14:24 UTC; HGL
