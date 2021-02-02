@@ -1,11 +1,10 @@
 Package: HOFA
 Type: Package
 Title: Higher-Order multi-cumulant Factor Analysis
-Version: 0.1.0
+Version: 0.2.0
 Author: Guanglin Huang
 Maintainer: Guanglin Huang <huang.guanglin@yahoo.com>
 Description: Implements the paper "Higher-order multi-cumulant factor analysis" for performing factors estimation and factors selection.
-    Use four spaces when indenting paragraphs within the Description.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
@@ -15,4 +14,4 @@ RoxygenNote: 7.1.1
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2021-01-31 21:12:03 UTC; HGL
+Packaged: 2021-02-02 11:02:55 UTC; HGL
