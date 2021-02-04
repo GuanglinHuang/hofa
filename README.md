@@ -6,5 +6,5 @@ Lu, Huang and Boudt (2020). Higher-order multi-cumulant factor analysis. https:/
 
 Installing the developer version of the package is possible by
 ```
-devtools::install_github("GuanglinHuang/HOFA")
+devtools::install_github("GuanglinHuang/hofa")
 ```
