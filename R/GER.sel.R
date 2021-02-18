@@ -51,7 +51,7 @@ GER.sel = function(X,scale = F,rmax = 8,L = 100,
     ggr2 =  which(gr2 == max(gr2))-1
     ger2 =   which(er2 == max(er2))-1
 
-    con = data.frame(ER = ger2,GR = ggr2)
+    con = as.matrix(data.frame(R_er = ger2,R_gr = ggr2))
 
     row.names(con) <- NULL
   }
@@ -129,9 +129,9 @@ GER.sel = function(X,scale = F,rmax = 8,L = 100,
     }
 
     ggr2g3 =  which(gr2g3 == max(gr2g3))-1
-    ger2g3 =   which(er2g3 == max(er2g3))-1
+    ger2g3 =  which(er2g3 == max(er2g3))-1
 
-    con = list(Rh = data.frame(GER3 = ger3,GGR3 = ggr3),Rg = data.frame(ER = ger2g3,GR = ggr2g3))
+    con = list(Rh = as.matrix(data.frame(GER3 = ger3,GGR3 = ggr3)),Rg = as.matrix(data.frame(ER = ger2g3,GR = ggr2g3)))
   }
   if(method == "GER4"){
     m2 = t(X)%*%X/t
@@ -210,7 +210,7 @@ GER.sel = function(X,scale = F,rmax = 8,L = 100,
     ggr2g4 =  which(gr2g4 == max(gr2g4))-1
     ger2g4 =   which(er2g4 == max(er2g4))-1
 
-    con = list(Rh = data.frame(GER4 = ger4,GGR4 = ggr4),Rg = data.frame(ER = ger2g4,GR = ggr2g4))
+    con = list(Rh = as.matrix(data.frame(GER4 = ger4,GGR4 = ggr4)),Rg = as.matrix(data.frame(ER = ger2g4,GR = ggr2g4)))
   }
   if(method == "JJR"){
     datai = scale(X,scale = T)

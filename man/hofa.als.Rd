@@ -4,16 +4,7 @@
 \alias{hofa.als}
 \title{Implementation for Alternating Least Square (ALS) algorithm in hofa}
 \usage{
-hofa.als(
-  X,
-  method = c("HFA3", "HFA4"),
-  gamma,
-  rh,
-  rg,
-  rmax = 8,
-  eps = 10^-8,
-  ...
-)
+hofa.als(X, method = c("HFA3", "HFA4"), gamma, rh, rg, eps = 10^-8, ...)
 }
 \arguments{
 \item{X}{A matrix or data frame with t rows (samples) and n columns (variables).}
@@ -26,8 +17,6 @@ hofa.als(
 \item{rh}{The number of non-Gaussian factors}
 
 \item{rg}{The number of Gaussian factors}
-
-\item{rmax}{The maximum number of factors}
 
 \item{eps}{The iteration error, default to 10^-8}
 

@@ -7,7 +7,6 @@
 #' @param gamma A weighted vector, a 2x1 vector for \code{HFA3} and a 3x1 vector for \code{HFA4}
 #' @param rh The number of non-Gaussian factors
 #' @param rg The number of Gaussian factors
-#' @param rmax The maximum number of factors
 #' @param eps The iteration error, default to 10^-8
 #' @param ... Any other parameters
 #' @return Estimated factors, factor loadings and commmon components.
@@ -20,10 +19,10 @@
 #' hofa.als(data,method = "HFA3", gamma = c(1,1),rh = 1, rg = 1)
 
 hofa.als = function(X,method =c("HFA3","HFA4"),gamma,rh,rg,
-               rmax = 8,eps = 10^-8,...){
+                    eps = 10^-8,...){
   n = NCOL(X)
   t = NROW(X)
-  kmax = rmax
+
   if(method == "HFA3"){
     gam0 = gamma[1]
     gam1 = gamma[2]
@@ -34,7 +33,6 @@ hofa.als = function(X,method =c("HFA3","HFA4"),gamma,rh,rg,
 
       eig_j = eigen(gam0*m2/n^2 + gam1*m3/n^3)
       evj_inl = eig_j$values/t^2
-      erj = evj_inl[1:kmax]/evj_inl[2:(kmax+1)]
       uh = eig_j$vectors[,1:rh]*sqrt(n)
       fh = c2_max%*%uh/n
       ch = c2_max%*%uh%*%t(uh)/n
@@ -109,7 +107,6 @@ hofa.als = function(X,method =c("HFA3","HFA4"),gamma,rh,rg,
 
       eig_j = eigen(gam0*m2/n^2 + gam1*m3/n^3 + gam2*m4/n^4)
       evj_inl = eig_j$values/t^2
-      erj = evj_inl[1:kmax]/evj_inl[2:(kmax+1)]
       uh = eig_j$vectors[,1:rh]*sqrt(n)
       fh = c2_max%*%uh/n
       ch = c2_max%*%uh%*%t(uh)/n
@@ -174,5 +171,5 @@ hofa.als = function(X,method =c("HFA3","HFA4"),gamma,rh,rg,
       c = c2_max%*%u%*%t(u)/n
     }
   }
-  return(list(f = f,u = u,cp = c))
+  return(list(Factor = f,Lambda = u,CP = c))
 }
