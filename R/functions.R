@@ -1,5 +1,5 @@
 
-fnorm  <- tensr::fnorm
+
 cov    <- stats::cov
 optim  <- stats::optim
 rsgt   <- sgt::rsgt
@@ -80,6 +80,7 @@ C4M <- function(X,m2)
   C4 = M4 - c + (e1 + e2)
 }
 
+fnorm  <- function(x){sqrt(sum(x^2))}
 
 JMCA = function(X,kmax)
   ###input interpretation###
