@@ -1,17 +1,17 @@
 Package: hofa
 Type: Package
 Title: Higher-Order multi-cumulant Factor Analysis
-Version: 0.6.0
+Version: 0.7.0
 Author: Guanglin Huang
 Maintainer: Guanglin Huang <huang.guanglin@yahoo.com>
 Description: Implements the paper "Higher-order multi-cumulant factor analysis" for performing factor estimation and factor selection.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-Imports: sgt, PerformanceAnalytics
+Imports: sgt, PerformanceAnalytics, ica, Iso, Rsolnp, pkgcond
 Depends: R (>= 2.10)
 RoxygenNote: 7.1.1
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2021-02-22 10:52:15 UTC; HGL
+Packaged: 2021-03-21 17:42:12 UTC; HGL

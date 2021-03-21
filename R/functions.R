@@ -1,5 +1,4 @@
 
-
 cov    <- stats::cov
 optim  <- stats::optim
 rsgt   <- sgt::rsgt
