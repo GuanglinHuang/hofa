@@ -2,7 +2,7 @@
 % Please edit documentation in R/Port_ICA.R
 \name{Port_ICA}
 \alias{Port_ICA}
-\title{Portfolio selection with parsimonious higher comoments estimation}
+\title{Portfolio selection with independent component analysis}
 \usage{
 Port_ICA(
   X,
@@ -42,9 +42,10 @@ A list contains the optimal portfolio weight \code{w}, the objective function va
 and the moments of epsilon \code{mm_eps}.
 }
 \description{
-Portfolio selection with parsimonious higher comoments estimation
+An implementation of the portfolio weight optimization through parsimonious higher comoments estimation presented in the paper:
+Lassance and Vrins (2020), Portfolio selection with parsimonious higher comoments estimation, Forthcoming in Journal of Banking and Finance.
 }
 \examples{
 data(sp500);
-Result = Port_ICA(sp500,k = 20,fn_sel = "IC3",Port_obj = "MVaR",Adjcov = "DNL");
+Result = Port_ICA(sp500,fn_sel = "IC3",Port_obj = "MVaR",Adjcov = "DNL");
 }

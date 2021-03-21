@@ -1,5 +1,6 @@
-#' Portfolio selection with parsimonious higher comoments estimation
-#'
+#' Portfolio selection with independent component analysis
+#' @description An implementation of the portfolio weight optimization through parsimonious higher comoments estimation presented in the paper:
+#' Lassance and Vrins (2020), Portfolio selection with parsimonious higher comoments estimation, Forthcoming in Journal of Banking and Finance.
 #' @param X A matrix or data frame with t rows (samples) and n columns (variables).
 #' @param k An integer, the number of factors. Default to \code{NULL}, several methods exist to select the number of factors.
 #' @param kmax An integer, the maximum number of factors. Default to \code{k=10}, only need when \code{k=NULL}.
@@ -14,7 +15,7 @@
 #' and the moments of epsilon \code{mm_eps}.
 #' @examples
 #' data(sp500);
-#' Result = Port_ICA(sp500,k = 20,fn_sel = "IC3",Port_obj = "MVaR",Adjcov = "DNL");
+#' Result = Port_ICA(sp500,fn_sel = "IC3",Port_obj = "MVaR",Adjcov = "DNL");
 
 
 Port_ICA = function(X,k = NULL,kmax = 10,fn_sel = c("ER","GR","IC3","ED"),
