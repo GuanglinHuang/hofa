@@ -1,5 +1,5 @@
 #' Portfolio selection with parsimonious higher comoments estimation
-#' Portfolio selection with higher-order comoments estimated by independent components analysis.
+#'
 #' @param X A matrix or data frame with t rows (samples) and n columns (variables).
 #' @param k An integer, the number of factors. Default to \code{NULL}, several methods exist to select the number of factors.
 #' @param kmax An integer, the maximum number of factors. Default to \code{k=10}, only need when \code{k=NULL}.

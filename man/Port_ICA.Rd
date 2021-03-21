@@ -2,8 +2,7 @@
 % Please edit documentation in R/Port_ICA.R
 \name{Port_ICA}
 \alias{Port_ICA}
-\title{Portfolio selection with parsimonious higher comoments estimation
-Portfolio selection with higher-order comoments estimated by independent components analysis.}
+\title{Portfolio selection with parsimonious higher comoments estimation}
 \usage{
 Port_ICA(
   X,
@@ -44,7 +43,6 @@ and the moments of epsilon \code{mm_eps}.
 }
 \description{
 Portfolio selection with parsimonious higher comoments estimation
-Portfolio selection with higher-order comoments estimated by independent components analysis.
 }
 \examples{
 data(sp500);
