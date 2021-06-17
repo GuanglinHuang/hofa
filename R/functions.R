@@ -79,7 +79,20 @@ C4M <- function(X,m2)
   C4 = M4 - c + (e1 + e2)
 }
 
+
 fnorm  <- function(x){sqrt(sum(x^2))}
+
+lag <- function(X,p){
+  c(rep(NA,p),X[1:(length(X)-p)])
+}
+
+lag.mat <- function(X,p){
+  X.lag = matrix(NA,length(X),p+1)
+  for (i in 0:p) {
+    X.lag[,i+1] <- lag(X,i)
+  }
+  return(X.lag)
+}
 
 JMCA = function(X,kmax)
   ###input interpretation###
