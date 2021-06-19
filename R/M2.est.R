@@ -1,17 +1,31 @@
-# t = 100
-# n = 100
-# k = 2
-# FF = matrix(rnorm(t*k),t,k)
-# W = matrix(rnorm(n*k),n,k)
-# E = matrix(rnorm(n*t),t,n)
-#
-# X = FF%*%t(W)+E
-#
-# X = read.csv("D:\\OneDrive\\my paper\\GERT\\GERT-JOE\\code\\CODE-LIST\\FRED-MD.csv",row.names = 1)
-# X = scale(X)
+#' Estimating the latent factors and factor loadings in high dimensional factor model based on the covariance or correlation matrix.
+#'
+#' @param X A matrix or data frame with t rows (samples) and n columns (variables).
+#' @param r The number of factors.
+#' @param scale logical. If \code{TRUE}, the variance of columns of X are normalized to 1 before factor estimation.
+#' @param method Method to use: "\code{PCA}", Principal Component Analysis; "\code{ML}", Maximum Likelihood method in Bai and Li (2012); "\code{QML}", Quasi-Maximum Likelihood method in Bai and Li (2013); "\code{ML-GLS}", Bai and Li (2013)'s two step "ML-GLS" method;
+#' "\code{ML-ITE}", Bai and Li (2013)'s Iterative "ML-GLS" method; "\code{ML-EM}", Bai and Li (2013)'s EM algorithm for Maximum Likelihood.
+#' @param eps The iteration error, default to 10^-8. Available for Maximum Likelihood methods.
+#' @param ar.order An integer. Auto regression lag for the idiosyncratic errors in \code{ML-GLS} and \code{ML-ITE}. If it is null, \code{ar.order} will be selected by AIC.
+#' @param ... Any other parameters.
+#' @return The number of non-Gaussian and Gaussian factors determined by selected approach.
+#' \itemize{
+#'   \item{\code{f}}{  Estimated factors.}
+#'   \item{\code{u}}{  Estimated factor loadings.}
+#'   \item{\code{e}}{  Estimated errors.}
+#'   \item{\code{m2e}}{  Diagonal elements of the covariance matrix of errors, only provided in \code{PCA} and \code{ML}.}
+#'   \item{\code{rho}}{  Auto regression coefficients of errors, only provided in \code{ML-GLS}, \code{ML-ITE} and \code{ML-EM}.}
+#' }
+#' @examples
+#' n = 100;t = 200;k = 2;
+#' par_f = c(0.5,0,2,2,Inf,Inf);
+#' par_e = c(1,0,2,Inf,0,0,0);
+#' rho_ar = c(0.5,0.2);
+#' data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X;
+#' M2.est(data,r = 2,method = "ML-EM");
 
 
-M2.est = function(X,r,scale = F,method = c("PCA","ML","QML","ML-GLS","ML-ITE","ML-EM","PPCA"),eps = 10^-6,ar.order = 1,max.order = 5,...){
+M2.est = function(X,r,scale = F,method = c("PCA","ML","QML","ML-GLS","ML-ITE","ML-EM","PPCA"),eps = 10^-6,ar.order = 1,...){
 
   if(method == "ML-EM" && ar.order != 1){
     stop("ML-EM can only be implement under ar.order = 1")
@@ -33,7 +47,7 @@ M2.est = function(X,r,scale = F,method = c("PCA","ML","QML","ML-GLS","ML-ITE","M
   m2_pca = cov(c_pca) + m2e_pca
 
   if(method == "PCA"){
-    con = list(f = f_pca,u = u_pca,e = e_pca,m2e = m2e_pca,m2x = m2_pca)
+    con = list(f = f_pca,u = u_pca,e = e_pca,m2e = m2e_pca)
     #print("PCA")
   }
 
@@ -71,7 +85,7 @@ M2.est = function(X,r,scale = F,method = c("PCA","ML","QML","ML-GLS","ML-ITE","M
     m2_ml = u_ml%*%t(u_ml) + Me_ml
 
     if(method == "ML"){
-      con = list(f = f_ml,u = u_ml,e = e_ml,m2e = Me_ml,m2x = m2_ml)
+      con = list(f = f_ml,u = u_ml,e = e_ml,m2e = Me_ml)
       #print("ML")
     }else{
       #QML
@@ -92,7 +106,7 @@ M2.est = function(X,r,scale = F,method = c("PCA","ML","QML","ML-GLS","ML-ITE","M
         for (kk in 1:10){
           for (i in 1:n){
             if(is.null(ar.order)){
-              ari = ar(e_gls[,i],order.max = max.order)
+              ari = ar(e_gls[,i],order.max = 5)
             }else{ari = ar(e_gls[,i],aic = F,order.max = ar.order)}
             rhoi = ari$ar
             rho[[i]] = rhoi
