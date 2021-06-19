@@ -18,4 +18,4 @@ Changes in version 0.8.0
  - Implement Fan et al.(2020)'s ACT estimator in M2.select.
  - Add M3.select and M4.select function to determine the number of factors based on the higher-order moment tensor.
  - Better user parameter setting in M3.select and M4.select functions.
-a line i wrote on my local computer
+ - a line i wrote on my local computer.
