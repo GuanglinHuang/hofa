@@ -136,7 +136,7 @@ M3.select = function(X,scale = F,rmax = 8,method = c("GER3","GGR3","JJR3"),
     for (i in 1:L) {
       smu <- matrix(rsgt(n*t,0,1,sgtpra_tol[1],sgtpra_tol[2],sgtpra_tol[3]),t,n)
       smu <- scale(smu)
-      lamdajc<- JMCA(smu,kmax,gamma = c(0,1,0))[[1]]
+      lamdajc <- JMCA(smu,kmax,gamma = c(0,1,0))[[1]]
 
       simulationcon[i,1] <- max(lamdajc)
       simulationcon[i,2] <- median(lamdajc)

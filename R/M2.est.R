@@ -10,7 +10,9 @@
 # X = read.csv("D:\\OneDrive\\my paper\\GERT\\GERT-JOE\\code\\CODE-LIST\\FRED-MD.csv",row.names = 1)
 # X = scale(X)
 
-M2.est = function(X,r,scale = F,method = c("PCA","ML","QML","ML-GLS","ML-ITE","ML-EM","PPCA"),eps = 10^-6,ar.order = 1,...){
+
+M2.est = function(X,r,scale = F,method = c("PCA","ML","QML","ML-GLS","ML-ITE","ML-EM","PPCA"),eps = 10^-6,ar.order = 1,max.order = 5,...){
+
   if(method == "ML-EM" && ar.order != 1){
     stop("ML-EM can only be implement under ar.order = 1")
   }

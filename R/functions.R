@@ -94,10 +94,7 @@ lag.mat <- function(X,p){
   return(X.lag)
 }
 
-JMCA = function(X,kmax)
-  ###input interpretation###
-  #X: a TxN matrix
-  #kmax: the maximum number of factors
+JMCA = function(X,kmax,gamma = c(1,1,1))
   {
   n  = NROW(X)
   t  = NCOL(X)
@@ -106,7 +103,7 @@ JMCA = function(X,kmax)
   m3 = M3M(smu)/t^2
   m4 = M4M(smu)/t^2
 
-  JJJC <- m2 + m3/n^2 + m4/n^4
+  JJJC <- gamma[1]*m2 + gamma[2]*m3/n^2 + gamma[3]*m4/n^4
 
   eigval <- sqrt(eigen(JJJC)$values)[1:kmax]
 

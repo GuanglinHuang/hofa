@@ -141,11 +141,11 @@ Port_ICA = function(X,k = NULL,kmax = 10,fn_sel = c("ER","GR","IC3","ED"),
   }
 
   if(Port_obj == "EU"){
-    rsol = pkgcond::suppress_conditions(Rsolnp::solnp(pars = rep(1/n,n),fun = function(z){Obj_EU(z,mm_factor = mmf,mm_eps = mme,m2_xhat = m2_xhat,A = A,gamma = gamma)},
+    rsol = pkgcond::suppress_conditions( Rsolnp::solnp(pars = rep(1/n,n),fun = function(z){Obj_EU(z,mm_factor = mmf,mm_eps = mme,m2_xhat = m2_xhat,A = A,gamma = gamma)},
                          eqfun = function(x){sum(x)},eqB = 1,LB = rep(lb,n),UB = rep(1,n)))
   }
 
-  con = list(w = rsol$pars,obj = tail(rsol$values,1), k = k, mm_factor = mmf, mm_eps = mme)
+  con = list(w = rsol$pars,obj = utils::tail(rsol$values,1), k = k, mm_factor = mmf, mm_eps = mme)
 
   return(con)
 }
