@@ -9,6 +9,9 @@ devtools::install_github("GuanglinHuang/hofa")
 
 **Update log:**
 
+Changes in version 0.8.1
+ - Add M2.est function to estimate the factors based on the covariance or correlation matrix. Maximum Likelihood methods in Bai and Li(2012,2013) are available now. This function still works in progress.
+
 Changes in version 0.8.0
  - Remove GER.sel function.
  - Add M2.select function to determine the number of factors based on the second-order moment matrix.
