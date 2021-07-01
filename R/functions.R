@@ -146,4 +146,6 @@ EST_sgt = function(skew,kurt,theta)
   return(SSE)
 }
 
-
+TraceRatio = function(f,f0){
+  sum(diag(t(f0)%*%f%*%solve(t(f)%*%f)%*%t(f)%*%f0))/sum(diag(t(f0)%*%f0))
+}
