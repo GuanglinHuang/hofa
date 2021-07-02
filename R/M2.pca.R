@@ -22,50 +22,36 @@
 #' data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X;
 #' M2.mle(data,r = 2,method = "ML-EM");
 
-n = 5000
-t = 50
-g1 = function(x){x}
-g2 = function(x){x^2-1}
-g3 = function(x){x^3-2*x}
-C = matrix(rnorm(n*3),n,3)
+n = 100
+t = 10
+g11 = function(x){x^3-2*x}
+g12 = function(x){x^2*sin(x)}
+g21 = function(x){x^2-1}
+g22 = function(x){x}
+g31 = function(x){x^3-x^2-x+1}
+g32 = function(x){exp(-x^2)*x^2}
+C = matrix(rnorm(n*2),n,2)
 W = matrix(NA,n,3)
-W[,1] <- g1(C[,1])
-W[,2] <- g2(C[,2])
-W[,3] <- g3(C[,3])
+W[,1] <- g11(C[,1])+g12(C[,2])
+W[,2] <- g21(C[,1])+g22(C[,2])
+W[,3] <- g31(C[,1])+g32(C[,2])
 FF = matrix(rnorm(t*3),t,3)
 EE = matrix(rnorm(t*n),t,n)
 X = W%*%t(FF) + t(EE)
-X = scale(X,scale = F)
-PX = X
-for (i in 1:t) {
-  reg_fit = gam(X[,i] ~ s(C[,1])+s(C[,2])+s(C[,3]))
-  PX[,i] <- reg_fit$fitted.values
-}
-
-eig = eigen(t(PX)%*%PX/n)
-
-F_hat = eig$vectors[,1:3]*sqrt(t)
-
-GX = PX%*%F_hat/t
-
-plot(C[,1],GX[,3])
-plot(C[,2],GX[,2])
-plot(C[,3],GX[,1])
-
-eigpca = eigen(t(X)%*%X/n)
-F_pca = eigpca$vectors[,1:3]*sqrt(t)
-W_pca = X%*%F_pca/t
 
 TraceRatio(F_pca,FF)
 TraceRatio(F_hat,FF)
 
-TraceRatio(GX,W)
 TraceRatio(W_pca,W)
+TraceRatio(W_pp,W)
 
+plot(C[,1],W_pca[,1])
+plot(C[,1],W_pca[,2])
 plot(C[,1],W_pca[,3])
-plot(C[,2],W_pca[,2])
-plot(C[,3],W_pca[,1])
-plot(C[,3],W[,3])
+
+plot(C[,1],W[,1])
+plot(C[,1],W[,2])
+plot(C[,1],W[,3])
 
 M2.pca = function(X,C,r,scale = F,method = c("PCA","P-PCA"),...){
 
@@ -79,9 +65,34 @@ M2.pca = function(X,C,r,scale = F,method = c("PCA","P-PCA"),...){
   f_pca = X1%*%u_pca/n
   c_pca = f_pca%*%t(u_pca)
   e_pca = X1 - c_pca
-  m2e_pca = diag(diag(cov(e_pca)),n,n)
-  m2_pca = cov(c_pca) + m2e_pca
+  if(method == "PCA"){
+    con = list(f = f_pca,u = u_pca,e = e_pca)
+  }
+  if(method == "P-PCA"){
+    X1 = scale(t(X),scale = scale)
+    d = NCOL(C)
+    for (i in 1:t) {
+      at = paste0("s(C[,",1,"],J)")
+      if(d > 1){
+        for (j in 2:d){
+          b = paste0("s(C[,",j,"],J)")
+          at = paste0(at,"+",b)
+        }
+      }
+      fo = paste0("X1[,i]~",at)
+      reg_fit = gam::gam(formula(fo))
+      PX[,i] <- reg_fit$fitted.values
+    }
+    eig = eigen(t(PX)%*%PX/n)
+    F_hat = eig$vectors[,1:3]*sqrt(t)
+    G_hat = PX%*%F_hat/t
+    W_hat = X%*%F_hat/t
+    Gamma_hat = W_hat-G_hat
 
+    con = list(f = F_hat,u = W_hat,Gx = G_hat,gamma = Gamma_hat, ev = eig$values)
+  }
+
+   return(con)
 }
 
 
