@@ -8,7 +8,11 @@ devtools::install_github("GuanglinHuang/hofa")
 ```
 
 **Update log:**
-
+Changes in version 0.8.2
+ - Remove M2.est function.
+ - Add M2.mle function to estimate the factors based on the covariance by using maximum likelihood methods in Bai and Li(2012,2013).
+ - Add M2.pca function to estimate the factors by using principal component analysis (Bai,2003; Fan et al.,2016). 
+ 
 Changes in version 0.8.1
  - Add M2.est function to estimate the factors based on the covariance or correlation matrix. Maximum Likelihood methods in Bai and Li(2012,2013) are available now. This function still works in progress.
 
