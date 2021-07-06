@@ -1,7 +1,7 @@
 Package: hofa
 Type: Package
 Title: higher-Order multi-cumulant factor analysis
-Version: 0.8.1
+Version: 0.8.3
 Author: Guanglin Huang
 Maintainer: Guanglin Huang <huang.guanglin@yahoo.com>
 Description: Implements several factor analysis approaches based on the covariance matrix and the higher-order multi-cumulants, including factor number selection, factor estimation and the applications in financial market.
