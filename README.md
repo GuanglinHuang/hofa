@@ -10,8 +10,8 @@ devtools::install_github("GuanglinHuang/hofa")
 **Update log:**
 Changes in version 0.8.3
  - Remove hofa.als function.
- - Add M3.als function to estimate the factors and factor loadings based on the third-order cumulant.
- - Add M4.als function to estimate the factors and factor loadings based on the fourth-order cumulant.
+ - Add M3.als function to estimate the factors and factor loadings based on the third-order cumulant alternating least square algorithm.
+ - Add M4.als function to estimate the factors and factor loadings based on the fourth-order cumulant alternating least square algorithm.
  
 Changes in version 0.8.2
  - Remove M2.est function.
