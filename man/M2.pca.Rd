@@ -2,7 +2,7 @@
 % Please edit documentation in R/M2.pca.R
 \name{M2.pca}
 \alias{M2.pca}
-\title{Estimating the latent factors and factor loadings in high dimensional factor model using principal component methods based on the covariance or correlation matrix.}
+\title{Estimating the latent factors using principal component methods}
 \usage{
 M2.pca(
   X,

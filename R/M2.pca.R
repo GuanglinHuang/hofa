@@ -1,5 +1,5 @@
-#' Estimating the latent factors and factor loadings in high dimensional factor model using principal component methods based on the covariance or correlation matrix.
-#'
+#' Estimating the latent factors using principal component methods
+#' @description Estimating the latent factors and factor loadings in high dimensional factor model using principal component methods based on the covariance or correlation matrix.
 #' @param X A matrix or data frame with t rows (samples) and n columns (variables).
 #' @param C Characteristics, a matrix with n rows (variables) and d columns (characteristics), used in Projected PCA.
 #' @param r The number of factors.

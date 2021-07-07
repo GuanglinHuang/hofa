@@ -2,7 +2,7 @@
 % Please edit documentation in R/M2.gmm.R
 \name{M2.gmm}
 \alias{M2.gmm}
-\title{Estimating the latent factors and factor loadings in high dimensional factor model using generalized moment methods based on the covariance matrix.}
+\title{Estimating the latent factors using generalized moment methods}
 \usage{
 M2.gmm(
   X,

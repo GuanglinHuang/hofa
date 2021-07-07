@@ -2,7 +2,7 @@
 % Please edit documentation in R/M2.mle.R
 \name{M2.mle}
 \alias{M2.mle}
-\title{Estimating the latent factors and factor loadings in high dimensional factor model using maximum likelihood methods based on the covariance or correlation matrix.}
+\title{Estimating the latent factors using maximum likelihood methods}
 \usage{
 M2.mle(
   X,

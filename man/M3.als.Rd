@@ -2,7 +2,7 @@
 % Please edit documentation in R/M3.als.R
 \name{M3.als}
 \alias{M3.als}
-\title{Implementation for Alternating Least Square (ALS) algorithm based on third-order multi-cumulant.}
+\title{Third-order Alternating Least Square (ALS) algorithm}
 \usage{
 M3.als(X, scale = FALSE, gamma = NULL, rh, rg, eps = 10^-8, ...)
 }
@@ -25,7 +25,7 @@ M3.als(X, scale = FALSE, gamma = NULL, rh, rg, eps = 10^-8, ...)
 Estimated factors, factor loadings and errors.
 }
 \description{
-Implementation for Alternating Least Square (ALS) algorithm based on third-order multi-cumulant.
+Estimating the latent factors using Alternating Least Square (ALS) algorithm based on third-order multi-cumulant.
 }
 \examples{
 n = 100;t = 200;k = 2;

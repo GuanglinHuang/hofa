@@ -1,5 +1,5 @@
-#' Estimating the latent factors and factor loadings in high dimensional factor model using maximum likelihood methods based on the covariance or correlation matrix.
-#'
+#' Estimating the latent factors using maximum likelihood methods
+#' @description Estimating the latent factors and factor loadings in high dimensional factor model using maximum likelihood methods based on the covariance or correlation matrix.
 #' @param X A matrix or data frame with t rows (samples) and n columns (variables).
 #' @param r The number of factors.
 #' @param scale logical. If \code{TRUE}, the variance of columns of X are normalized to 1 before factor estimation.

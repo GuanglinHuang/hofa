@@ -2,7 +2,7 @@
 % Please edit documentation in R/M4.als.R
 \name{M4.als}
 \alias{M4.als}
-\title{Implementation for Alternating Least Square (ALS) algorithm based on fourth-order multi-cumulant.}
+\title{Fourth-order Alternating Least Square (ALS) algorithm}
 \usage{
 M4.als(X, scale = FALSE, gamma = NULL, rh, rg, eps = 10^-8, ...)
 }
@@ -25,7 +25,7 @@ M4.als(X, scale = FALSE, gamma = NULL, rh, rg, eps = 10^-8, ...)
 Estimated factors, factor loadings and errors.
 }
 \description{
-Implementation for Alternating Least Square (ALS) algorithm based on fourth-order multi-cumulant.
+Estimating the latent factors using Alternating Least Square (ALS) algorithm based on fourth-order multi-cumulant.
 }
 \examples{
 n = 100;t = 200;k = 2;

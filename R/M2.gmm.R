@@ -1,5 +1,5 @@
-#' Estimating the latent factors and factor loadings in high dimensional factor model using generalized moment methods based on the covariance matrix.
-#'
+#' Estimating the latent factors using generalized moment methods
+#' @description Estimating the latent factors and factor loadings in high dimensional factor model using generalized moment methods based on the covariance matrix.
 #' @param X A matrix or data frame with t rows (samples) and n columns (variables).
 #' @param r The number of factors.
 #' @param kappa An integer. The weight between \code{M} and \code{VWV'}, \code{M} denotes the covariance matrix and \code{VWV'} denotes the GMM matrix. \code{kappa} default to 0.

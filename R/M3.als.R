@@ -1,6 +1,5 @@
-#' Implementation for Alternating Least Square (ALS) algorithm based on third-order multi-cumulant.
-#'
-#'
+#' Third-order Alternating Least Square (ALS) algorithm
+#' @description Estimating the latent factors using Alternating Least Square (ALS) algorithm based on third-order multi-cumulant.
 #' @param X A matrix or data frame with t rows (samples) and n columns (variables).
 #' @param scale logical. If \code{TRUE}, the variance of columns of X are normalized to 1 before factor estimation.
 #' @param gamma A weighted vector, default to (0,1).
