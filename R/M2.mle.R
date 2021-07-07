@@ -8,7 +8,7 @@
 #' @param eps The iteration error, default to 10^-8. Available for Maximum Likelihood methods.
 #' @param ar.order An integer. Auto regression lag for the idiosyncratic errors in \code{ML-GLS} and \code{ML-ITE}. If it is null, \code{ar.order} will be selected by AIC.
 #' @param ... Any other parameters.
-#' @return The number of non-Gaussian and Gaussian factors determined by selected approach.
+#' @return A list of factors, factor loadings and other information, see below.
 #' \itemize{
 #'   \item{\code{f}}{  Estimated factors.}
 #'   \item{\code{u}}{  Estimated factor loadings.}

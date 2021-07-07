@@ -31,7 +31,7 @@ M2.mle(
 \item{...}{Any other parameters.}
 }
 \value{
-The number of non-Gaussian and Gaussian factors determined by selected approach.
+A list of factors, factor loadings and other information, see below.
 \itemize{
   \item{\code{f}}{  Estimated factors.}
   \item{\code{u}}{  Estimated factor loadings.}

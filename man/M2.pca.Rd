@@ -4,7 +4,16 @@
 \alias{M2.pca}
 \title{Estimating the latent factors and factor loadings in high dimensional factor model using principal component methods based on the covariance or correlation matrix.}
 \usage{
-M2.pca(X, C = NULL, r, scale = F, method = c("PCA", "P-PCA"), J = NULL, ...)
+M2.pca(
+  X,
+  C = NULL,
+  r,
+  center = F,
+  scale = F,
+  method = c("PCA", "P-PCA"),
+  J = NULL,
+  ...
+)
 }
 \arguments{
 \item{X}{A matrix or data frame with t rows (samples) and n columns (variables).}
@@ -12,6 +21,8 @@ M2.pca(X, C = NULL, r, scale = F, method = c("PCA", "P-PCA"), J = NULL, ...)
 \item{C}{Characteristics, a matrix with n rows (variables) and d columns (characteristics), used in Projected PCA.}
 
 \item{r}{The number of factors.}
+
+\item{center}{logical. If \code{TRUE}, the mean of columns of X are normalized to 0 before factor estimation.}
 
 \item{scale}{logical. If \code{TRUE}, the variance of columns of X are normalized to 1 before factor estimation.}
 
@@ -22,7 +33,7 @@ M2.pca(X, C = NULL, r, scale = F, method = c("PCA", "P-PCA"), J = NULL, ...)
 \item{...}{Any other parameters.}
 }
 \value{
-The number of non-Gaussian and Gaussian factors determined by selected approach.
+A list of factors, factor loadings and other information, see below.
 \itemize{
   \item{\code{f}}{  Estimated factors.}
   \item{\code{u}}{  Estimated factor loadings.}

@@ -3,11 +3,12 @@
 #' @param X A matrix or data frame with t rows (samples) and n columns (variables).
 #' @param C Characteristics, a matrix with n rows (variables) and d columns (characteristics), used in Projected PCA.
 #' @param r The number of factors.
+#' @param center logical. If \code{TRUE}, the mean of columns of X are normalized to 0 before factor estimation.
 #' @param scale logical. If \code{TRUE}, the variance of columns of X are normalized to 1 before factor estimation.
 #' @param method Method to use: "\code{PCA}", Basic Principal Component Analysis; "\code{P-PCA}", Fan et al.(2016)'s Projected PCA.
 #' @param J The number of sieve terms in Projected PCA. Default to use the criterion in Fan et al.(2016).
 #' @param ... Any other parameters.
-#' @return The number of non-Gaussian and Gaussian factors determined by selected approach.
+#' @return A list of factors, factor loadings and other information, see below.
 #' \itemize{
 #'   \item{\code{f}}{  Estimated factors.}
 #'   \item{\code{u}}{  Estimated factor loadings.}
@@ -31,7 +32,7 @@
 
 
 
-M2.pca = function(X,C = NULL,r,scale = F,method = c("PCA","P-PCA"),J = NULL,...){
+M2.pca = function(X,C = NULL,r,center = F,scale = F,method = c("PCA","P-PCA"),J = NULL,...){
   s <- gam::s
   if(method == "P-PCA" && is.null(C)){
     stop("Please input characteristic variables for Projected PCA.")
@@ -55,7 +56,7 @@ M2.pca = function(X,C = NULL,r,scale = F,method = c("PCA","P-PCA"),J = NULL,...)
     if(is.null(J)){
       J = round(3*(n*min(n,t))^(1/4))-1
     }
-    X1 = scale(t(X),scale = scale)
+    X1 = scale(t(X),center = center,scale = scale)
     d = NCOL(C)
     PX = X1
     for (i in 1:t) {
@@ -71,7 +72,7 @@ M2.pca = function(X,C = NULL,r,scale = F,method = c("PCA","P-PCA"),J = NULL,...)
       PX[,i] <- reg_fit$fitted.values
     }
     eig = eigen(t(PX)%*%PX/n)
-    F_hat = eig$vectors[,1:3]*sqrt(t)
+    F_hat = eig$vectors[,1:r]*sqrt(t)
     G_hat = PX%*%F_hat/t
     W_hat = X1%*%F_hat/t
     e_hat = t(X1 - W_hat%*%t(F_hat))
