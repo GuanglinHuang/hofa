@@ -24,43 +24,6 @@
 #' data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X;
 #' M2.gmm(data,r = 2,kappa = 0,sigma = rep(1,n),initial = "PCA");
 
-con = vector()
-rep = 100
-for (iii in 1:rep) {
-  n = 10;t = 100;d = 1;r = 3;
-  g1 = function(x){x^3-2*x};
-  g2 = function(x){x^2-1};
-  g3 = function(x){x};
-  C = matrix(rnorm(n*d),n,d);W = matrix(NA,n,r);
-  W[,1] <- g1(C);W[,2] <- g2(C);W[,3] <- g3(C);
-  FF = matrix(rnorm(t*r),t,r);
-  sige = diag(sqrt(runif(n,0.5,20)))
-  EE = matrix(rnorm(t*n),t,n)%*%sige;
-  MU = rep(1,t)%*%t(runif(n,0,4))
-  X = FF%*%t(W) + EE;
-
-  gmm1 = M2.gmm(X,r = 3,kappa = 0,sigma = NULL,initial = "MLE",W_diag = T)
-  gmm2 = M2.gmm(X,r = 3,kappa = 0,sigma = NULL,initial = "MLE")
-  gmm3 = M2.gmm(X,r = 3,kappa = 0,sigma = NULL,initial = "PCA")
-
-  c1 = TraceRatio(gmm1$u,W)
-  c2 = TraceRatio(gmm2$u,W)
-  c3 = TraceRatio(gmm3$u,W)
-  con = rbind(con,c(c1,c2,c3))
-  print(iii)
-}
-
-boxplot(con)
-
-pca = M2.pca(X,r=3,method = "PCA")
-ppca = M2.pca(X,C = C,r = 3,method = "P-PCA",J = 4)
-TraceRatio(pca$u,W)
-TraceRatio(ppca$u,W)
-
-TraceRatio(gmm$f,FF)
-TraceRatio(pca$f,FF)
-TraceRatio(ppca$f,FF)
-
 M2.gmm <- function(X,r,kappa = 0,sigma = NULL,initial = c("PCA","MLE"),W_diag = FALSE,delta = NULL,eps = 10^-6,...){
 
   n = NCOL(X)

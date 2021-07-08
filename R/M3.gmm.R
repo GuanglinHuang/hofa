@@ -24,62 +24,7 @@
 #' M2.gmm(data,r = 2,kappa = 0,sigma = rep(1,n),initial = "PCA");
 
 
-n = 10;t = 300;d = 1;r = 3;
-g1 = function(x){x^3-2*x};
-g2 = function(x){x^2-1};
-g3 = function(x){x};
-C = matrix(rnorm(n*d),n,d);W = matrix(NA,n,r);
-W[,1] <- g1(C);W[,2] <- g2(C);W[,3] <- g3(C);
-FF = matrix(rnorm(t*r),t,r);
-EE = matrix(rnorm(t*n),t,n);
-MU = rep(1,t)%*%t(runif(n,0,4))
-X = FF%*%t(W) + EE;
-
-gmm = M2.gmm(X,r = 3,kappa = 0,sigma = rep(1,n),initial = "MLE",eps = 10^-4)
-pca = M2.pca(X,r=3,method = "PCA")
-ppca = M2.pca(X,C = C,r = 3,method = "P-PCA",J = 4)
-TraceRatio(gmm$u,W)
-TraceRatio(pca$u,W)
-TraceRatio(ppca$u,W)
-
-TraceRatio(gmm$f,FF)
-TraceRatio(pca$f,FF)
-TraceRatio(ppca$f,FF)
-
-kap_tol = seq(0,5,0.1)
-rep = 100
-hgl = 1
-con_tol = vector()
-for (kappa in kap_tol){
-
-  con = vector()
-  for (iii in 1:rep) {
-    n = 30;t = 100;d = 1;r = 3;
-    g1 = function(x){x};
-    g2 = function(x){x};
-    g3 = function(x){x};
-    C = matrix(rnorm(n*d),n,d);W = matrix(NA,n,r);
-    W[,1] <- g1(C);W[,2] <- g2(C);W[,3] <- g3(C);
-    FF = matrix(rnorm(t*r),t,r);
-    EE = matrix(rnorm(t*n),t,n);
-    MU = rep(1,t)%*%t(runif(n,2,2))
-    X = FF%*%t(W) + EE;
-
-    gmm = M2.gmm(X,r = 3,kappa = kappa,sigma = rep(1,n),initial = "PCA")
-
-    con[iii] <- as.numeric(TraceRatio(gmm$u,W))
-  }
-
-  con_tol = cbind(con_tol,con)
-
-  print(hgl)
-  hgl = hgl +1
-}
-
-plot(colMeans(con_tol),type="b")
-boxplot(con_tol)
-
-M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),delta = NULL,eps = 10^-6,...){
+M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),W_diag = FALSE,delta = NULL,eps = 10^-6,...){
 
   n = NCOL(X)
   t = NROW(X)
@@ -154,20 +99,30 @@ M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),delta = NULL,eps = 10^
   #m2
   v2 = t(X)%*%X/t - diag(sigma_e)
   #m3
-  v3 = PerformanceAnalytics::M3.MM()
+  sk_e_mat = matrix(0,n,n^2)
+  for (iii in 1:n){
+    sk_e_mat[iii,iii + n*(iii-1)] <- sk_e[iii]
+  }
+  v3 = PerformanceAnalytics::M3.MM(X) - sk_e_mat
 
-  V = cbind(v1,v2)
+  V = cbind(v1,v2,v3)
 
   #
   W_sol = matrix(0,m,m)
   for (tt in 1:t) {
     v1_i = X[tt,]
-    v2_i = X[tt,]%*%t(X[tt,]) - diag(sigma)
-    V_i = cbind(v1_i,v2_i)
+    v2_i = X1[tt,]%*%t(X1[tt,]) - diag(sigma_e)
+    v3_i = X1[tt,]%*%(t(X1[tt,])%x%t(X1[tt,])) - sk_e_mat
+    V_i = cbind(v1_i,v2_i,v3_i)
 
     W_sol = W_sol + t(V_i)%*%(diag(n) - u_inl_id%*%t(u_inl_id))%*%V_i
   }
   W_sol = W_sol/t
+
+  if(W_diag == T){
+    W_sol = diag(diag(W_sol),m,m)
+  }
+
   eig_w = eigen(W_sol)
   ev_w = as.numeric(eig_w$values[1:(min(n,t))])
   if(is.null(delta)){
@@ -179,7 +134,7 @@ M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),delta = NULL,eps = 10^
 
   eig_gmm =  eigen(kappa*t(X)%*%X/t + V%*%WW%*%t(V))
 
-  uv_gmm = as.numeric(matrix(eig_gmm$vectors,n,r))
+  uv_gmm = as.numeric(eig_gmm$vectors[,1:r])
   u_gmm = matrix(uv_gmm,n,r)
   ev_gmm = (as.numeric(eig_gmm$values))[1:(min(n,t))]
 
@@ -191,3 +146,76 @@ M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),delta = NULL,eps = 10^
 
   return(con)
 }
+
+
+# rep = 100
+# con= matrix(NA,rep,4)
+# for (iii in 1:rep) {
+#   n = 20;t = 50;d = 1;r = 3;
+#   g1 = function(x){x};
+#   g2 = function(x){x};
+#   g3 = function(x){x};
+#   C = matrix(rnorm(n*d),n,d);W = matrix(NA,n,r);
+#   W[,1] <- g1(C);W[,2] <- g2(C);W[,3] <- g3(C);
+#   FF = (matrix(rchisq(t*r,1),t,r)-1)%*%diag(sqrt(c(3,1,1)));
+#   sig = diag(sqrt(runif(n,0.5,5)))
+#   EE = matrix(rchisq(t*n,1),t,n)-1;
+#   MU = rep(1,t)%*%t(runif(n,0,4))
+#   X = FF%*%t(W) + EE;
+#
+#   gmm2 = M2.gmm(X,r = 3,kappa = 0,initial = "MLE")
+#   gmm3 = M3.gmm(X,r = 3,kappa = 0,initial = "MLE")
+#
+#  con[iii,1] = TraceRatio(gmm2$u,W)
+#  con[iii,2] = TraceRatio(gmm3$u,W)
+#
+#  con[iii,3] = TraceRatio(gmm2$f,FF)
+#  con[iii,4] = TraceRatio(gmm3$f,FF)
+#  print(iii)
+# }
+# boxplot(con[,1:2])
+# boxplot(con[,3:4])
+#
+# pca = M2.pca(X,r=3,method = "PCA")
+# ppca = M2.pca(X,C = C,r = 3,method = "P-PCA",J = 4)
+# TraceRatio(gmm$u,W)
+# TraceRatio(pca$u,W)
+# TraceRatio(ppca$u,W)
+#
+# TraceRatio(gmm$f,FF)
+# TraceRatio(pca$f,FF)
+# TraceRatio(ppca$f,FF)
+#
+# kap_tol = seq(0,5,0.1)
+# rep = 100
+# hgl = 1
+# con_tol = vector()
+# for (kappa in kap_tol){
+#
+#   con = vector()
+#   for (iii in 1:rep) {
+#     n = 30;t = 100;d = 1;r = 3;
+#     g1 = function(x){x};
+#     g2 = function(x){x};
+#     g3 = function(x){x};
+#     C = matrix(rnorm(n*d),n,d);W = matrix(NA,n,r);
+#     W[,1] <- g1(C);W[,2] <- g2(C);W[,3] <- g3(C);
+#     FF = (matrix(rchisq(t*r,1),t,r)-1)%*%diag(sqrt(c(3,1,0.5)));
+#     EE = matrix(rchisq(t*n,1),t,n)-1;
+#     MU = rep(1,t)%*%t(runif(n,0,4))
+#     X = FF%*%t(W) + EE;
+#
+#     gmm = M2.gmm(X,r = 3,kappa = kappa,sigma = rep(1,n),initial = "PCA")
+#
+#     con[iii] <- as.numeric(TraceRatio(gmm$u,W))
+#   }
+#
+#   con_tol = cbind(con_tol,con)
+#
+#   print(hgl)
+#   hgl = hgl +1
+# }
+#
+# plot(colMeans(con_tol),type="b")
+# boxplot(con_tol)
+
