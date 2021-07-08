@@ -9,6 +9,10 @@ devtools::install_github("GuanglinHuang/hofa")
 
 **Update log:**
 
+Changes in version 0.8.5
+ - small revsion in M2.gmm function.
+ - add M3.gmm function, using third-order moment for Generalized Moment Method in Fan and Zhong(2018).
+ 
 Changes in version 0.8.4
  - Add M2.gmm function to estimate the factors and factor loadings by Generalized Moment Method in Fan and Zhong(2018).
  - Update the descriptions of M2.pca, M2.mle, M3.als and M4.als functions.
