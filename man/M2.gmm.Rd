@@ -20,7 +20,7 @@ M2.gmm(
 
 \item{r}{The number of factors.}
 
-\item{kappa}{An integer. The weight between \code{M} and \code{VWV'}, \code{M} denotes the covariance matrix and \code{VWV'} denotes the GMM matrix. \code{kappa} default to 0.}
+\item{kappa}{An integer. The weight between \code{M} and \code{VWV}, \code{M} denotes the covariance matrix and \code{VWV} denotes the GMM matrix. \code{kappa} default to 0.}
 
 \item{sigma}{A \code{n x 1} vector, the variance of the error terms. If it is \code{NULL}, the variance vector will be initialized by PCA or MLE.}
 
