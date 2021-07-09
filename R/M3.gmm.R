@@ -1,12 +1,13 @@
-#' Estimating the latent factors using generalized moment methods
-#' @description Estimating the latent factors and factor loadings in high dimensional factor model using generalized moment methods based on the covariance matrix.
+#' Estimating the latent factors using third-order generalized moment methods
+#' @description Estimating the latent factors and factor loadings in high dimensional factor model using generalized moment methods based on the third-order cumulant.
 #' @param X A matrix or data frame with t rows (samples) and n columns (variables).
 #' @param r The number of factors.
 #' @param kappa An integer. The weight between \code{M} and \code{VWV}, \code{M} denotes the covariance matrix and \code{VWV} denotes the GMM matrix. \code{kappa} default to 0.
-#' @param sigma A \code{n x 1} vector, the variance of the error terms. If it is \code{NULL}, the variance vector will be initialized by PCA or MLE.
-#' @param initial The method used to initialize the factor loadings and the variance of errors. \code{PCA} denotes Principal Component Analysis and \code{MLE} denotes Maximum Likelihood Estimation in Bai and Li(2012).
+#' @param initial The method used to initialize the factor loadings and the moments of error. \code{PCA} denotes Principal Component Analysis and \code{MLE} denotes Maximum Likelihood Estimation in Bai and Li(2012).
+#' @param W_diag Logical. If \code{TRUE}, the weight matrix \code{W} only has nonzero diagonal elements, default to \code{FALSE}.
+#' @param identity Logical. If \code{TRUE}, the moments of errors are unified to identity, default to \code{FALSE}.
 #' @param delta An integer. The hard threshold value of \code{W} matrix in order to guarantee non-singularity of \code{W}, default to 1/log(t).
-#' @param eps The iteration error, default to 10^-8. Available for initializing the estimators by Maximum Likelihood method.
+#' @param eps The iteration error, default to 10^-6. Available for initializing the estimators by Maximum Likelihood method.
 #' @param ... Any other parameters.
 #' @return A list of factors, factor loadings and other information, see below.
 #' \itemize{
@@ -21,15 +22,15 @@
 #' par_e = c(1,0,2,Inf,0,0,0);
 #' rho_ar = c(0.5,0.2);
 #' data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X;
-#' M2.gmm(data,r = 2,kappa = 0,sigma = rep(1,n),initial = "PCA");
+#' M3.gmm(data,r = 2,kappa = 0,initial = "PCA");
 
 
-M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),W_diag = FALSE,delta = NULL,eps = 10^-6,...){
+M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),W_diag = FALSE,identity = FALSE,delta = NULL,eps = 10^-6,...){
 
   n = NCOL(X)
   t = NROW(X)
 
-  m = n^2 + n + 1
+  m = n + n + 1
   X1 = scale(X,scale = FALSE)
   Mx = cov(X1)
 
@@ -93,17 +94,22 @@ M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),W_diag = FALSE,delta =
 
   sigma_e = sigma_id
   sk_e = sk_id
+
+  if(identity == T){
+    sigma_e = rep(mean(sigma_e),n)
+    sk_e = rep(mean(sk_e),n)
+  }
+
+  # sigma_e = rep(2,n)
+  # sk_e = rep(8,n)
+
   #g(x) functions
   #m1
   v1 = colMeans(X)
   #m2
-  v2 = t(X)%*%X/t - diag(sigma_e)
+  v2 = t(X1)%*%X1/t - diag(sigma_e)
   #m3
-  sk_e_mat = matrix(0,n,n^2)
-  for (iii in 1:n){
-    sk_e_mat[iii,iii + n*(iii-1)] <- sk_e[iii]
-  }
-  v3 = PerformanceAnalytics::M3.MM(X) - sk_e_mat
+  v3 = t(X1*X1)%*%X1/t - diag(sk_e)
 
   V = cbind(v1,v2,v3)
 
@@ -112,7 +118,7 @@ M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),W_diag = FALSE,delta =
   for (tt in 1:t) {
     v1_i = X[tt,]
     v2_i = X1[tt,]%*%t(X1[tt,]) - diag(sigma_e)
-    v3_i = X1[tt,]%*%(t(X1[tt,])%x%t(X1[tt,])) - sk_e_mat
+    v3_i = (X1[tt,]*X1[tt,])%*%(t(X1[tt,])) - diag(sk_e)
     V_i = cbind(v1_i,v2_i,v3_i)
 
     W_sol = W_sol + t(V_i)%*%(diag(n) - u_inl_id%*%t(u_inl_id))%*%V_i
@@ -129,7 +135,7 @@ M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),W_diag = FALSE,delta =
     delta = 1/log(t)
   }
   id = which(ev_w > delta)
-  evec = matrix(as.numeric(eig_w$vectors[,id]),m,min(n,t))
+  evec = matrix(as.numeric(eig_w$vectors[,1:(min(n,t))]),m,min(n,t))
   WW = (evec[,id])%*%diag(1/ev_w[id])%*%t(evec[,id])
 
   eig_gmm =  eigen(kappa*t(X)%*%X/t + V%*%WW%*%t(V))
@@ -149,32 +155,36 @@ M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),W_diag = FALSE,delta =
 
 
 # rep = 100
-# con= matrix(NA,rep,4)
-# for (iii in 1:rep) {
-#   n = 20;t = 50;d = 1;r = 3;
+# con= matrix(NA,rep,6)
+# set.seed(1231)
+# for (iii in 1:rep){
+#   n = 100;t = 100;d = 1;r = 2;u = 2;
 #   g1 = function(x){x};
 #   g2 = function(x){x};
-#   g3 = function(x){x};
 #   C = matrix(rnorm(n*d),n,d);W = matrix(NA,n,r);
-#   W[,1] <- g1(C);W[,2] <- g2(C);W[,3] <- g3(C);
-#   FF = (matrix(rchisq(t*r,1),t,r)-1)%*%diag(sqrt(c(3,1,1)));
-#   sig = diag(sqrt(runif(n,0.5,5)))
-#   EE = matrix(rchisq(t*n,1),t,n)-1;
-#   MU = rep(1,t)%*%t(runif(n,0,4))
+#   W[,1] <- g1(C);W[,2] <- g2(C);
+#   FF = matrix(NA,t,r);
+#   FF[,1] = rnorm(t) - u;FF[,2] = rnorm(t) + u
+#   sige = diag(sqrt(runif(n,1,1)))
+#   EE = (matrix(rchisq(t*n,1),t,n)-1)%*%sige;
 #   X = FF%*%t(W) + EE;
 #
-#   gmm2 = M2.gmm(X,r = 3,kappa = 0,initial = "MLE")
-#   gmm3 = M3.gmm(X,r = 3,kappa = 0,initial = "MLE")
+#   pca2 = M2.pca(X,r = 2,method = "PCA")
+#   gmm2 = M2.gmm(X,r = 2,kappa = 0,identity = F,initial = "PCA")
+#   gmm3 = M3.gmm(X,r = 2,kappa = 0,identity = F,initial = "PCA")
 #
 #  con[iii,1] = TraceRatio(gmm2$u,W)
 #  con[iii,2] = TraceRatio(gmm3$u,W)
+#  con[iii,3] = TraceRatio(pca2$u,W)
 #
-#  con[iii,3] = TraceRatio(gmm2$f,FF)
-#  con[iii,4] = TraceRatio(gmm3$f,FF)
+#  con[iii,4] = TraceRatio(gmm2$f,FF)
+#  con[iii,5] = TraceRatio(gmm3$f,FF)
+#  con[iii,6] = TraceRatio(pca2$f,FF)
 #  print(iii)
 # }
-# boxplot(con[,1:2])
-# boxplot(con[,3:4])
+#
+# boxplot(con[,c(1,2,3)])
+# boxplot(con[,4:6])
 #
 # pca = M2.pca(X,r=3,method = "PCA")
 # ppca = M2.pca(X,C = C,r = 3,method = "P-PCA",J = 4)

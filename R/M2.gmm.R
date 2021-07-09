@@ -6,6 +6,7 @@
 #' @param sigma A \code{n x 1} vector, the variance of the error terms. If it is \code{NULL}, the variance vector will be initialized by PCA or MLE.
 #' @param initial The method used to initialize the factor loadings and the variance of errors. \code{PCA} denotes Principal Component Analysis and \code{MLE} denotes Maximum Likelihood Estimation in Bai and Li(2012).
 #' @param W_diag Logical. If \code{TRUE}, the weight matrix \code{W} only has nonzero diagonal elements, default to \code{FALSE}.
+#' @param identity Logical. If \code{TRUE}, the variances of errors are unified to identity, default to \code{FALSE}.
 #' @param delta An integer. The hard threshold value of \code{W} matrix in order to guarantee non-singularity of \code{W}, default to 1/log(t).
 #' @param eps The iteration error, default to 10^-6. Available for initializing the estimators by Maximum Likelihood method.
 #' @param ... Any other parameters.
@@ -24,7 +25,7 @@
 #' data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X;
 #' M2.gmm(data,r = 2,kappa = 0,sigma = rep(1,n),initial = "PCA");
 
-M2.gmm <- function(X,r,kappa = 0,sigma = NULL,initial = c("PCA","MLE"),W_diag = FALSE,delta = NULL,eps = 10^-6,...){
+M2.gmm <- function(X,r,kappa = 0,sigma = NULL,initial = c("PCA","MLE"),W_diag = FALSE,identity = FALSE,delta = NULL,eps = 10^-6,...){
 
   n = NCOL(X)
   t = NROW(X)
@@ -86,16 +87,20 @@ M2.gmm <- function(X,r,kappa = 0,sigma = NULL,initial = c("PCA","MLE"),W_diag = 
     sigma = sigma_id
   }
 
+  if(identity == T){
+    sigma_e = rep(mean(sigma_e),n)
+  }
+
   #g(x) functions
   #m1
   v1 = colMeans(X)
   #m2
-  v2 = t(X)%*%X/t - diag(sigma)
+  v2 = t(X1)%*%X1/t - diag(sigma)
 
   W_sol = matrix(0,m,m)
   for (tt in 1:t) {
       v1_i = X[tt,]
-      v2_i = X[tt,]%*%t(X[tt,]) - diag(sigma)
+      v2_i = X1[tt,]%*%t(X1[tt,]) - diag(sigma)
       V_i = cbind(v1_i,v2_i)
 
       W_sol = W_sol + t(V_i)%*%(diag(n) - u_inl_id%*%t(u_inl_id))%*%V_i
@@ -114,7 +119,7 @@ M2.gmm <- function(X,r,kappa = 0,sigma = NULL,initial = c("PCA","MLE"),W_diag = 
     delta = 1/log(t)
   }
   id = which(ev_w > delta)
-  evec = matrix(as.numeric(eig_w$vectors[,id]),m,min(n,t))
+  evec = matrix(as.numeric(eig_w$vectors[,1:(min(n,t))]),m,min(n,t))
   WW = (evec[,id])%*%diag(1/ev_w[id])%*%t(evec[,id])
 
   eig_gmm =  eigen(kappa*t(X)%*%X/t + V%*%WW%*%t(V))

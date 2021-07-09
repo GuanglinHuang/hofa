@@ -9,8 +9,11 @@ devtools::install_github("GuanglinHuang/hofa")
 
 **Update log:**
 
+Changes in version 0.8.6
+ - small revision in M2.gmm and M3.gmm functions.
+ 
 Changes in version 0.8.5
- - small revsion in M2.gmm function.
+ - small revision in M2.gmm function.
  - add M3.gmm function, using third-order moment for Generalized Moment Method in Fan and Zhong(2018).
  
 Changes in version 0.8.4
