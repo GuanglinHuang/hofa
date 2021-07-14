@@ -158,20 +158,20 @@ M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),W_diag = FALSE,identit
 # con= matrix(NA,rep,6)
 # set.seed(1231)
 # for (iii in 1:rep){
-#   n = 100;t = 100;d = 1;r = 2;u = 2;
+#   n = 50;t = 50;d = 2;r = 2;u = 0;
 #   g1 = function(x){x};
 #   g2 = function(x){x};
 #   C = matrix(rnorm(n*d),n,d);W = matrix(NA,n,r);
-#   W[,1] <- g1(C);W[,2] <- g2(C);
+#   W[,1] <- g1(C[,1]);W[,2] <- g2(C[,2]);
 #   FF = matrix(NA,t,r);
 #   FF[,1] = rnorm(t) - u;FF[,2] = rnorm(t) + u
-#   sige = diag(sqrt(runif(n,1,1)))
+#   sige = diag(sqrt(runif(n,1,5)))
 #   EE = (matrix(rchisq(t*n,1),t,n)-1)%*%sige;
 #   X = FF%*%t(W) + EE;
 #
 #   pca2 = M2.pca(X,r = 2,method = "PCA")
-#   gmm2 = M2.gmm(X,r = 2,kappa = 0,identity = F,initial = "PCA")
-#   gmm3 = M3.gmm(X,r = 2,kappa = 0,identity = F,initial = "PCA")
+#   gmm2 = M2.gmm(X,r = 2,kappa = 0.1,identity = F,initial = "MLE")
+#   gmm3 = M3.gmm(X,r = 2,kappa = 0.1,identity = F,initial = "MLE")
 #
 #  con[iii,1] = TraceRatio(gmm2$u,W)
 #  con[iii,2] = TraceRatio(gmm3$u,W)
@@ -179,10 +179,10 @@ M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),W_diag = FALSE,identit
 #
 #  con[iii,4] = TraceRatio(gmm2$f,FF)
 #  con[iii,5] = TraceRatio(gmm3$f,FF)
-#  con[iii,6] = TraceRatio(pca2$f,FF)
+#  con[iii,6] = TraceRatio(pca2$f,scale(FF,scale = F))
 #  print(iii)
 # }
-#
+
 # boxplot(con[,c(1,2,3)])
 # boxplot(con[,4:6])
 #

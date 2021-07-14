@@ -49,7 +49,7 @@ M4.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),skewness = FALSE,W_dia
     u_inl_id = u_pca
     sigma_id = colMeans(e_pca^2)
     sk_id = colMeans(e_pca^3)
-    kt_id = colMeans(e_pca^4)
+    kt_id = colMeans(e_pca^4) - 3*sigma_id^2
   }
   #use MLE to initialize sigma_e
   if(initial == "MLE"){
@@ -90,7 +90,7 @@ M4.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),skewness = FALSE,W_dia
     u_inl_id = ev_inl$vectors[,1:r]
     sigma_id = diag(Me_inl)
     sk_id = colMeans(e_inl^3)
-    kt_id = colMeans(e_inl^4)
+    kt_id = colMeans(e_inl^4) - 3*sigma_id^2
   }
 
   sigma_e = sigma_id
@@ -111,7 +111,7 @@ M4.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),skewness = FALSE,W_dia
   #m3
   v3 = t(X1*X1)%*%X1/t - diag(sk_e)
   #m4
-  v4 = t(X1*X1*X1)%*%(X1)/t - diag(kt_e)
+  v4 = t(X1*X1*X1)%*%(X1)/t - 3*(t(X1)%*%X1/t)*(colMeans(X1^2)%*%t(rep(1,n))) - diag(kt_e)
 
   if(skewness == T){
     V = cbind(v1,v2,v3,v4)
@@ -125,7 +125,7 @@ M4.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),skewness = FALSE,W_dia
     v1_i = X[tt,]
     v2_i = X1[tt,]%*%t(X1[tt,]) - diag(sigma_e)
     v3_i = (X1[tt,]*X1[tt,])%*%(t(X1[tt,])) - diag(sk_e)
-    v4_i = (X1[tt,]*X1[tt,]*X1[tt,])%*%t(X1[tt,]) - diag(kt_e)
+    v4_i = (X1[tt,]*X1[tt,]*X1[tt,])%*%t(X1[tt,]) - 3*(X1[tt,]%*%t(X1[tt,]))*(colMeans(X1^2)%*%t(rep(1,n))) - diag(kt_e)
     if(skewness == T){
       V_i = cbind(v1_i,v2_i,v3_i,v4_i)
     }else{
@@ -150,6 +150,8 @@ M4.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),skewness = FALSE,W_dia
 
   eig_gmm =  eigen(kappa*t(X)%*%X/t + V%*%WW%*%t(V))
 
+  # plot(eig_gmm$values)
+
   uv_gmm = as.numeric(eig_gmm$vectors[,1:r])
   u_gmm = matrix(uv_gmm,n,r)
   ev_gmm = (as.numeric(eig_gmm$values))[1:(min(n,t))]
@@ -168,21 +170,26 @@ rep = 100
 con= matrix(NA,rep,4)
 set.seed(1231)
 for (iii in 1:rep){
-  n = 100;t = 200;d = 1;r = 2;u = 2;
+  n = 50;t = 50;d = 2;r = 2;u = 2;
   g1 = function(x){x};
   g2 = function(x){x};
   C = matrix(rnorm(n*d),n,d);W = matrix(NA,n,r);
-  W[,1] <- g1(C);W[,2] <- g2(C);
+  W[,1] <- g1(C[,1]);W[,2] <- g2(C[,2]);
   FF = matrix(NA,t,r);
   FF[,1] = rnorm(t) - u;FF[,2] = rnorm(t) + u
-  sige = diag(sqrt(runif(n,1,1)))
-  EE = (matrix(rchisq(t*n,1),t,n)-1)%*%sige;
+  sige = diag(sqrt(runif(n,1,5)))
+  EE = scale((matrix(rchisq(t*n,1),t,n) - 1),scale = F)%*%sige;
   X = FF%*%t(W) + EE;
 
   pca2 = M2.pca(X,r = 2,method = "PCA")
-  gmm2 = M2.gmm(X,r = 2,kappa = 0,identity = F,initial = "PCA")
-  gmm3 = M3.gmm(X,r = 2,kappa = 0,identity = F,initial = "PCA")
-  gmm4 = M4.gmm(X,r = 2,kappa = 0,identity = F,initial = "PCA")
+  gmm2 = M2.gmm(X,r = 2,kappa = 0.5,identity = F,initial = "PCA")
+  gmm3 = M3.gmm(X,r = 2,kappa = 0.5,identity = F,initial = "PCA")
+  gmm4 = M4.gmm(X,r = 2,kappa = 0.5,identity = F,skewness = F,initial = "PCA")
+
+  # TraceRatio(gmm2$u,W)
+  # TraceRatio(gmm3$u,W)
+  # TraceRatio(gmm4$u,W)
+  # TraceRatio(pca2$u,W)
 
  con[iii,1] = TraceRatio(gmm2$u,W)
  con[iii,2] = TraceRatio(gmm3$u,W)
@@ -191,7 +198,7 @@ for (iii in 1:rep){
  print(iii)
 }
 
-boxplot(con[,c(1,2,4)])
+boxplot(con[,c(1,2,3,4)])
 boxplot(con[,4:6])
 #
 # pca = M2.pca(X,r=3,method = "PCA")
