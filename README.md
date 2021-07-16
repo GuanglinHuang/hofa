@@ -9,6 +9,10 @@ devtools::install_github("GuanglinHuang/hofa")
 
 **Update log:**
 
+Changes in version 0.8.7
+ - add M4.gmm function, using fourth-order moment for Generalized Moment Method in Fan and Zhong(2018), still in processing.
+ - fix bugs in M2.gmm, M2.mle and M2.pca functions.
+ 
 Changes in version 0.8.6
  - small revision in M2.gmm and M3.gmm functions.
  
