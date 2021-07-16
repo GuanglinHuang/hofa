@@ -46,6 +46,10 @@ M2.mle = function(X,r,scale = F,method = c("ML","QML","ML-GLS","ML-ITE","ML-EM")
   m2e_pca = diag(diag(cov(e_pca)),n,n)
   m2_pca = cov(c_pca) + m2e_pca
 
+  u_pca = as.matrix(u_pca)
+  f_pca = as.matrix(f_pca)
+  e_pca = as.matrix(e_pca)
+
   #ML
   if(method == "ML"||method == "QML"||method == "ML-GLS"||method == "ML-ITE"||method == "ML-EM"){
     B_k = u_pca #initialize
@@ -79,14 +83,18 @@ M2.mle = function(X,r,scale = F,method = c("ML","QML","ML-GLS","ML-ITE","ML-EM")
     e_ml = X1 - f_ml%*%t(u_ml)
     m2_ml = u_ml%*%t(u_ml) + Me_ml
 
+    u_ml = as.matrix(u_ml)
+    f_ml = as.matrix(f_ml)
+    e_ml = as.matrix(e_ml)
+
     if(method == "ML"){
-      con = list(f = f_ml,u = u_ml,e = e_ml,m2e = Me_ml)
+      con = list(f = f_ml,u = u_ml,e = e_ml,m2e = diag(Me_ml))
       #print("ML")
     }else{
       #QML
-      u_qml = u_ml
-      f_qml = f_ml
-      e_qml = e_ml
+      u_qml = as.matrix(u_ml)
+      f_qml = as.matrix(f_ml)
+      e_qml = as.matrix(e_ml)
       if(method == "QML"){
         con = list(f = f_qml,u = u_qml,e = e_qml)
         #print("QML")
@@ -119,6 +127,10 @@ M2.mle = function(X,r,scale = F,method = c("ML","QML","ML-GLS","ML-ITE","ML-EM")
           e_gls = X1 - f_gls%*%t(u_gls)
           me_gls = diag(cov(e_gls))
 
+          u_gls = as.matrix(u_gls)
+          f_gls = as.matrix(f_gls)
+          e_gls = as.matrix(e_gls)
+
           if(method == "ML-GLS"||method == "ML-EM"){
             con = list(f = f_gls,u = u_gls,e = e_gls,rho = rho)
             #print("ML-GLS")
@@ -136,11 +148,11 @@ M2.mle = function(X,r,scale = F,method = c("ML","QML","ML-GLS","ML-ITE","ML-EM")
                 Ft = cbind(u_em,-diag(rho_em)%*%u_em)
                 Gt = cbind(rbind(diag(r),diag(r)),matrix(0,2*r,r))
                 Vt = diag(me_em,n,n)
-                Wt = dlm::bdiag(m2u,diag(rep(0,r)))
+                Wt = dlm::bdiag(m2u,diag(rep(0,r),r,r))
                 Zt = X1[2:t,] - X1[1:(t-1),]%*%diag(rho_em)
-                kalman_mod = dlm::dlm(FF = Ft,V = Vt,GG = Gt,W = Wt,m0 = rep(0,2*r), C0 = diag(c(1,1,0,0)))
+                kalman_mod = dlm::dlm(FF = Ft,V = Vt,GG = Gt,W = Wt,m0 = rep(0,2*r), C0 = diag(c(rep(1,r),rep(0,r))))
                 kalman_smooth = dlm::dlmSmooth(Zt,mod = kalman_mod)
-                f_smooth = kalman_smooth$s
+                f_smooth = as.matrix(kalman_smooth$s)
                 V00 = cov(kalman_smooth$s)[1:r,1:r]
                 V01 = cov(kalman_smooth$s)[1:r,(r+1):(2*r)]
                 V11 = cov(kalman_smooth$s)[(r+1):(2*r),(r+1):(2*r)]
@@ -149,13 +161,13 @@ M2.mle = function(X,r,scale = F,method = c("ML","QML","ML-GLS","ML-ITE","ML-EM")
                 rho_em_1 = rho_em
                 me_em_1 = me_em
                 for (i in 1:n) {
-                  u_em_1[i,] = t(solve(V00-rho_em[i]*V01-rho_em[i]*t(V01)+(rho_em[i])^2*V11)%*%colMeans((f_smooth[2:t,1:r]-rho_em[i]*f_smooth[2:t,(r+1):(2*r)])*(X1[2:t,i] - X1[1:(t-1),i]*rho_em[i])))
-                  rho_em_1[i] = sum((X1[2:t,i]*X1[1:(t-1),i]-X1[2:t,i]*f_smooth[2:t,(r+1):(2*r)]%*%u_em_1[i,]-X1[1:(t-1),i]*f_smooth[2:t,(1):(r)]%*%u_em_1[i,]+ rep(u_em_1[i,]%*%V01%*%u_em_1[i,],t-1)))/sum(X1[1:(t-1),i]^2-2*X1[1:(t-1),i]*f_smooth[2:t,(r+1):(2*r)]%*%u_em_1[i,]+ rep(u_em_1[i,]%*%V11%*%u_em_1[i,],t-1))
-                  me_em_1[i] = mean((X1[2:t,i] - X1[1:(t-1),i]*rho_em_1[i])^2 - 2*(X1[2:t,i] - X1[1:(t-1),i]*rho_em_1[i])*f_smooth[2:t,(1):(r)]%*%u_em_1[i,] + 2*rho_em_1[i]*(X1[2:t,i] - X1[1:(t-1),i]*rho_em_1[i])*f_smooth[2:t,(r+1):(2*r)]%*%u_em_1[i,] + rep(u_em_1[i,]%*%V00%*%u_em_1[i,],t-1)
+                  u_em_1[i,] = t(solve(V00-rho_em[i]*V01-rho_em[i]*t(V01)+(rho_em[i])^2*V11)%*%as.matrix(apply(as.matrix((f_smooth[2:t,1:r]-rho_em[i]*f_smooth[2:t,(r+1):(2*r)])*(X1[2:t,i] - X1[1:(t-1),i]*rho_em[i])),2,mean)))
+                  rho_em_1[i] = sum((X1[2:t,i]*X1[1:(t-1),i]-X1[2:t,i]*as.matrix(f_smooth[2:t,(r+1):(2*r)])%*%u_em_1[i,]-X1[1:(t-1),i]*as.matrix(f_smooth[2:t,(1):(r)])%*%u_em_1[i,]+ rep(u_em_1[i,]%*%V01%*%u_em_1[i,],t-1)))/sum(X1[1:(t-1),i]^2-2*X1[1:(t-1),i]*as.matrix(f_smooth[2:t,(r+1):(2*r)])%*%u_em_1[i,]+ rep(u_em_1[i,]%*%V11%*%u_em_1[i,],t-1))
+                  me_em_1[i] = mean((X1[2:t,i] - X1[1:(t-1),i]*rho_em_1[i])^2 - 2*(X1[2:t,i] - X1[1:(t-1),i]*rho_em_1[i])*as.matrix(f_smooth[2:t,(1):(r)])%*%u_em_1[i,] + 2*rho_em_1[i]*(X1[2:t,i] - X1[1:(t-1),i]*rho_em_1[i])*as.matrix(f_smooth[2:t,(r+1):(2*r)])%*%u_em_1[i,] + rep(u_em_1[i,]%*%V00%*%u_em_1[i,],t-1)
                                     - 2*rho_em_1[i]*rep(u_em_1[i,]%*%V01%*%u_em_1[i,],t-1) + (rho_em_1[i])^2*rep(u_em_1[i,]%*%V00%*%u_em_1[i,],t-1))
                   psi_em = V01%*%solve(V11)
                 }
-                m2u = cov(f_smooth[2:t,1:r] - f_smooth[2:t,(r+1):(2*r)]%*%psi_em)
+                m2u = cov(f_smooth[2:t,1:r] - as.matrix(f_smooth[2:t,(r+1):(2*r)])%*%psi_em)
 
                 error = fnorm(u_em_1-u_em)^2 + fnorm(rho_em_1-rho_em)^2 + fnorm(me_em_1-me_em)^2
                 er_tol = c(er_tol,error)
@@ -166,6 +178,11 @@ M2.mle = function(X,r,scale = F,method = c("ML","QML","ML-GLS","ML-ITE","ML-EM")
               }
               f_em = t(solve(t(u_em)%*%diag(1/me_em)%*%u_em)%*%t(u_em)%*%diag(1/me_em)%*%t(X1))
               e_em = X1 - f_em%*%t(u_em)
+
+              u_em = as.matrix(u_em)
+              f_em = as.matrix(f_em)
+              e_em = as.matrix(e_em)
+
               con = list(f = f_em,u = u_em,e = e_em,rho = rho_em)
             }
             break

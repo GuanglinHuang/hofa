@@ -53,6 +53,7 @@ M2.pca = function(X,C = NULL,r,center = F,scale = F,method = c("PCA","P-PCA"),J 
     con = list(f = f_pca,u = u_pca,e = e_pca, ev = eigen(Mx)$values/t)
   }
   if(method == "P-PCA"){
+    C = as.matrix(C)
     if(is.null(J)){
       J = round(3*(n*min(n,t))^(1/4))-1
     }

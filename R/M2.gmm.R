@@ -138,3 +138,4 @@ M2.gmm <- function(X,r,kappa = 0,sigma = NULL,initial = c("PCA","MLE"),W_diag = 
 }
 
 
+
