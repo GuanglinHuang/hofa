@@ -166,40 +166,40 @@ M4.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),skewness = FALSE,W_dia
 }
 
 
-rep = 100
-con= matrix(NA,rep,4)
-set.seed(1231)
-for (iii in 1:rep){
-  n = 50;t = 50;d = 2;r = 2;u = 2;
-  g1 = function(x){x};
-  g2 = function(x){x};
-  C = matrix(rnorm(n*d),n,d);W = matrix(NA,n,r);
-  W[,1] <- g1(C[,1]);W[,2] <- g2(C[,2]);
-  FF = matrix(NA,t,r);
-  FF[,1] = rnorm(t) - u;FF[,2] = rnorm(t) + u
-  sige = diag(sqrt(runif(n,1,5)))
-  EE = scale((matrix(rchisq(t*n,1),t,n) - 1),scale = F)%*%sige;
-  X = FF%*%t(W) + EE;
-
-  pca2 = M2.pca(X,r = 2,method = "PCA")
-  gmm2 = M2.gmm(X,r = 2,kappa = 0.5,identity = F,initial = "PCA")
-  gmm3 = M3.gmm(X,r = 2,kappa = 0.5,identity = F,initial = "PCA")
-  gmm4 = M4.gmm(X,r = 2,kappa = 0.5,identity = F,skewness = F,initial = "PCA")
-
-  # TraceRatio(gmm2$u,W)
-  # TraceRatio(gmm3$u,W)
-  # TraceRatio(gmm4$u,W)
-  # TraceRatio(pca2$u,W)
-
- con[iii,1] = TraceRatio(gmm2$u,W)
- con[iii,2] = TraceRatio(gmm3$u,W)
- con[iii,3] = TraceRatio(gmm4$u,W)
- con[iii,4] = TraceRatio(pca2$u,W)
- print(iii)
-}
-
-boxplot(con[,c(1,2,3,4)])
-boxplot(con[,4:6])
+# rep = 100
+# con= matrix(NA,rep,4)
+# set.seed(1231)
+# for (iii in 1:rep){
+#   n = 50;t = 50;d = 2;r = 2;u = 2;
+#   g1 = function(x){x};
+#   g2 = function(x){x};
+#   C = matrix(rnorm(n*d),n,d);W = matrix(NA,n,r);
+#   W[,1] <- g1(C[,1]);W[,2] <- g2(C[,2]);
+#   FF = matrix(NA,t,r);
+#   FF[,1] = rnorm(t) - u;FF[,2] = rnorm(t) + u
+#   sige = diag(sqrt(runif(n,1,5)))
+#   EE = scale((matrix(rchisq(t*n,1),t,n) - 1),scale = F)%*%sige;
+#   X = FF%*%t(W) + EE;
+#
+#   pca2 = M2.pca(X,r = 2,method = "PCA")
+#   gmm2 = M2.gmm(X,r = 2,kappa = 0.5,identity = F,initial = "PCA")
+#   gmm3 = M3.gmm(X,r = 2,kappa = 0.5,identity = F,initial = "PCA")
+#   gmm4 = M4.gmm(X,r = 2,kappa = 0.5,identity = F,skewness = F,initial = "PCA")
+#
+#   # TraceRatio(gmm2$u,W)
+#   # TraceRatio(gmm3$u,W)
+#   # TraceRatio(gmm4$u,W)
+#   # TraceRatio(pca2$u,W)
+#
+#  con[iii,1] = TraceRatio(gmm2$u,W)
+#  con[iii,2] = TraceRatio(gmm3$u,W)
+#  con[iii,3] = TraceRatio(gmm4$u,W)
+#  con[iii,4] = TraceRatio(pca2$u,W)
+#  print(iii)
+# }
+#
+# boxplot(con[,c(1,2,3,4)])
+# boxplot(con[,4:6])
 #
 # pca = M2.pca(X,r=3,method = "PCA")
 # ppca = M2.pca(X,C = C,r = 3,method = "P-PCA",J = 4)
