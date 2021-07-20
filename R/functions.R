@@ -149,3 +149,139 @@ EST_sgt = function(skew,kurt,theta)
 TraceRatio = function(f,f0){
   sum(diag(t(f0)%*%f%*%solve(t(f)%*%f)%*%t(f)%*%f0))/sum(diag(t(f0)%*%f0))
 }
+
+
+Portfolio.Moments = function(w,mm_factor,mm_eps,A,cumulant = T){
+
+  m2f = mm_factor[[1]];
+  m3f = mm_factor[[2]];
+  m4f = mm_factor[[3]];
+
+  m2e = mm_eps[[1]];
+  m3e = mm_eps[[2]];
+  m4e = mm_eps[[3]];
+
+  B = t(w)%*%A
+
+  #M2
+  m2P = sum((B^2)*m2f) + sum((w^2)*m2e);
+  #M3
+  m3P = sum((B^3)*m3f) + sum((w^3)*m3e);
+  #M4
+  if(cumulant == T){
+    m4P = sum(B^4*(m4f-3*m2f^2)) + sum((w^4)*(m4e-3*m2e^2)) + 3*m2P^2;
+  }else{
+    m4P = sum(B^4*m4f) + 3*sum(t(B^2)%*%(B^2) - diag(diag(t(B^2)%*%(B^2)))) + sum((w^4)*m4e) + 3*sum((w^2*m2e)%*%t(w^2*m2e) - diag(diag((w^2*m2e)%*%t(w^2*m2e)))) + 6*sum((B^2)*m2f)*sum(w^2*m2e)
+  }
+  mmP = c(m2P,m3P,m4P)
+  return(mmP)
+}
+
+Obj.MVaR = function(mmP,alpha = 0.01,...){
+
+  m2P = mmP[1];
+  m3P = mmP[2];
+  m4P = mmP[3];
+
+  zalpha = qnorm(alpha);
+  #M2
+  stdP = sqrt(m2P);
+  #M3
+  skewP = m3P/(stdP^3);
+  #M4
+  kurtP = m4P/(stdP^4);
+
+  #MVaR
+  Obj = - stdP*zalpha + stdP*(-(1/6)*(zalpha^2-1)*skewP - (1/24)*(zalpha^3-3*zalpha)*kurtP + (1/36)*(2*zalpha^3 - 5*zalpha)*skewP^2);
+
+  return(Obj)
+}
+
+Obj.EU = function(mmP,gamma = 10,...){
+
+  m2P = mmP[1];
+  m3P = mmP[2];
+  m4P = mmP[3];
+
+  #EU
+  Obj =  gamma/2*m2P - gamma*(gamma+1)/6*m3P + gamma*(gamma+1)*(gamma+2)/24*m4P
+
+  return(Obj)
+}
+
+
+Vm = function(X,k){
+  X = scale(X,scale = F)
+  return(colMeans(X^k))
+}
+
+Matmax = function(c = 0,X){
+  X[X < c] <- 0
+  return(X)
+}
+
+DNLshrink = function(X,k = 1,...){
+  n = NROW(X)
+  p = NCOL(X)
+  S = cov(X)*(n-1)/n
+  lambda = eigen(S)$values
+
+
+  ts = which(lambda < 10^(-8))
+  if(length(ts)>0){
+    lambda[ts] <- lambda[min(ts) - 1]
+  }
+  u = eigen(S)$vectors
+
+
+  #compute direct kernel estimator
+  lambda = lambda[max(1,p-n+1):p]
+  L = lambda%*%t(rep(1,min(p,n)))
+  h = n^(-0.35)
+  f_tilde = rowMeans(sqrt(Matmax(0,4*t(L)^2*h^2 - (L - t(L))^2))/(2*pi*t(L)^2*h^2))
+  Hf_tilde = rowMeans((sign(L - t(L))*sqrt(Matmax(0,(L-t(L))^2 - 4*t(L)^2*h^2))-L+t(L))/
+                        (2*pi*t(L)^2*h^2))
+  if(p <= n){
+    d_tilde = lambda/((pi*(p/n)*lambda*f_tilde)^2 + (1-(p/n)-pi*(p/n)*lambda*Hf_tilde)^2)
+  }else{
+    Hf_tilde0 = (1-sqrt(1-4*h^2))/(2*pi*h^2)*mean(1/lambda)
+    d_tilde0 = 1/(pi*(p-n)/n*Hf_tilde0)
+    d_tilde1 = lambda/(pi^2*lambda^2*(f_tilde^2+Hf_tilde^2))
+    d_tilde = c(rep(d_tilde0,p-n),d_tilde1)
+  }
+  d_hat = Iso::pava(d_tilde,decreasing = T)
+
+  S_hat = u%*%diag(d_hat^k)%*%t(u)
+  S_sample = u%*%diag(lambda^k)%*%t(u)
+
+  result = list(S_hat = S_hat,
+                S_sample = S_sample,
+                d_tilde = d_tilde,
+                d_hat = d_hat,
+                lambda = lambda,
+                u      = u,
+                f_tilde = f_tilde,
+                Hf_tilde = Hf_tilde)
+  return(result)
+}
+
+LIshrink = function (X, k = 0){
+  n <- nrow(X)
+  p <- ncol(X)
+  if (k == 0) {
+    X <- X - tcrossprod(rep(1, n), colMeans(X))
+    k = 1
+  }
+  if (n > k)
+    effn <- n - k
+  else stop("k must be strictly less than nrow(X)")
+  S <- crossprod(X)/effn
+  Ip <- diag(p)
+  m <- sum(S * Ip)/p
+  d2 <- sum((S - m * Ip)^2)/p
+  b_bar2 <- 1/(p * effn^2) * sum(apply(X, 1, function(x) sum((tcrossprod(x) -
+                                                                S)^2)))
+  b2 <- min(d2, b_bar2)
+  a2 <- d2 - b2
+  return(b2/d2 * m * Ip + a2/d2 * S)
+}
