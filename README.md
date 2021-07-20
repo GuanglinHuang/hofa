@@ -9,6 +9,10 @@ devtools::install_github("GuanglinHuang/hofa")
 
 **Update log:**
 
+Changes in version 0.8.8
+ - add Portfolio.IC function, implement Lassance and Vrins (2020)'s IC portfolio.
+ - fix bugs in functions.R.
+
 Changes in version 0.8.7
  - add M4.gmm function, using fourth-order moment for Generalized Moment Method in Fan and Zhong(2018), still in processing.
  - fix bugs in M2.gmm, M2.mle and M2.pca functions.
