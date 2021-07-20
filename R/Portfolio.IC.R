@@ -15,10 +15,10 @@
 #' and the moments of epsilon \code{mm_eps}.
 #' @examples
 #' data(sp500);
-#' Result = Port_ICA(sp500,fn_sel = "IC3",Port_obj = "MVaR",Adjcov = "DNL");
+#' Result = Portfolio.IC(sp500,fn_sel = "IC3",Port_obj = "MVaR",Adjcov = "DNL");
 
 
-Port_ICA = function(X,k = NULL,kmax = 10,fn_sel = c("ER","GR","IC3","ED"),
+Portfolio.IC = function(X,k = NULL,kmax = 10,fn_sel = c("ER","GR","IC3","ED"),
                      Port_obj = c("MVaR","EU"),alpha = 0.01,gamma = 10,Adjcov = c("DNL","LI"),shortselling = T,...){
 
   n = NCOL(X)
