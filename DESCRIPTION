@@ -8,7 +8,7 @@ Description: Implements several factor analysis approaches based on the covarian
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-Imports: sgt, PerformanceAnalytics, ica, Iso, Rsolnp, pkgcond, dlm, gam
+Imports: sgt, PerformanceAnalytics, ica, Iso, Rsolnp2, pkgcond, dlm, gam
 Depends: R (>= 2.10)
 RoxygenNote: 7.1.1
 Suggests: knitr, rmarkdown

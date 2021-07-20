@@ -127,7 +127,7 @@ Portfolio.IC = function(X,k = NULL,kmax = 10,fn_sel = c("ER","GR","IC3","ED"),
   m4e = Vm(eps,4)
   mme = list(m2e,m3e,m4e)
 
-  m2_xhat = A%*%t(A) + diag(m2e)
+  m2_xhat = A%*%diag(m2f,k,k)%*%t(A) + diag(m2e)
 
   if(shortselling == T){
     lb = -1
@@ -136,16 +136,18 @@ Portfolio.IC = function(X,k = NULL,kmax = 10,fn_sel = c("ER","GR","IC3","ED"),
   }
 
   if(Port_obj == "MVaR"){
-    rsol = pkgcond::suppress_conditions(Rsolnp::solnp(pars = rep(1/n,n),fun = function(z){Obj_MVaR(z,mm_factor = mmf,mm_eps = mme,m2_xhat = m2_xhat,A = A,alpha = alpha)},
-                         eqfun = function(x){sum(x)},eqB = 1,LB = rep(lb,n),UB = rep(1,n)))
+    fun_obj = function(z){Obj_MVaR(z,mm_factor = mmf,mm_eps = mme,m2_xhat = m2_xhat,A = A,alpha = alpha)}
+    rsol = pkgcond::suppress_conditions(Rsolnp2::solnp2NLP(par = rep(1/n,n),fun = fun_obj,
+                         eqA = matrix(1,1,n),eqA.bound = 1,par.lower = rep(lb,n),par.upper = rep(1,n)))
   }
 
   if(Port_obj == "EU"){
-    rsol = pkgcond::suppress_conditions( Rsolnp::solnp(pars = rep(1/n,n),fun = function(z){Obj_EU(z,mm_factor = mmf,mm_eps = mme,m2_xhat = m2_xhat,A = A,gamma = gamma)},
-                         eqfun = function(x){sum(x)},eqB = 1,LB = rep(lb,n),UB = rep(1,n)))
+    fun_obj = function(z){Obj_EU(z,mm_factor = mmf,mm_eps = mme,m2_xhat = m2_xhat,A = A,gamma = gamma)}
+    rsol = pkgcond::suppress_conditions(Rsolnp2::solnp2NLP(par = rep(1/n,n),fun = fun_obj,
+                                                           eqA = matrix(1,1,n),eqA.bound = 1,par.lower = rep(lb,n),par.upper = rep(1,n)))
   }
 
-  con = list(w = rsol$pars,obj = utils::tail(rsol$values,1), k = k, mm_factor = mmf, mm_eps = mme)
+  con = list(w = rsol$par,obj = as.numeric(rsol$objective), k = k, mm_factor = mmf, mm_eps = mme)
 
   return(con)
 }
