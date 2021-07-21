@@ -1,3 +1,5 @@
+useDynLib(hofa, .registration=TRUE)
+importFrom(Rcpp, evalCpp)
 exportPattern("^[[:alpha:]]+")
 importFrom("stats", "arima.sim", "cov", "median", "optim", "rnorm",
                "runif", "ar", "cov2cor", "lm", "na.omit", "qnorm")
