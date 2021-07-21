@@ -82,14 +82,14 @@ C4M <- function(X,m2)
 
 fnorm  <- function(x){sqrt(sum(x^2))}
 
-lag <- function(X,p){
+hofa.lag <- function(X,p){
   c(rep(NA,p),X[1:(length(X)-p)])
 }
 
 lag.mat <- function(X,p){
   X.lag = matrix(NA,length(X),p+1)
   for (i in 0:p) {
-    X.lag[,i+1] <- lag(X,i)
+    X.lag[,i+1] <- hofa.lag(X,i)
   }
   return(X.lag)
 }
@@ -151,7 +151,7 @@ TraceRatio = function(f,f0){
 }
 
 
-Portfolio.Moments = function(w,mm_factor,mm_eps,A,cumulant = T){
+Portfolio.Moments = function(w,mm_factor,mm_eps,A){
 
   m2f = mm_factor[[1]];
   m3f = mm_factor[[2]];
@@ -168,11 +168,34 @@ Portfolio.Moments = function(w,mm_factor,mm_eps,A,cumulant = T){
   #M3
   m3P = sum((B^3)*m3f) + sum((w^3)*m3e);
   #M4
-  if(cumulant == T){
-    m4P = sum(B^4*(m4f-3*m2f^2)) + sum((w^4)*(m4e-3*m2e^2)) + 3*m2P^2;
-  }else{
-    m4P = sum(B^4*m4f) + 3*sum(t(B^2)%*%(B^2) - diag(diag(t(B^2)%*%(B^2)))) + sum((w^4)*m4e) + 3*sum((w^2*m2e)%*%t(w^2*m2e) - diag(diag((w^2*m2e)%*%t(w^2*m2e)))) + 6*sum((B^2)*m2f)*sum(w^2*m2e)
-  }
+
+  m4P = sum(B^4*(m4f-3*m2f^2)) + sum((w^4)*(m4e-3*m2e^2)) + 3*m2P^2;
+
+  # m4P = sum(B^4*m4f) + 3*sum(t(B^2)%*%(B^2) - diag(diag(t(B^2)%*%(B^2)))) + sum((w^4)*m4e) + 3*sum((w^2*m2e)%*%t(w^2*m2e) - diag(diag((w^2*m2e)%*%t(w^2*m2e)))) + 6*sum((B^2)*m2f)*sum(w^2*m2e)
+
+  mmP = c(m2P,m3P,m4P)
+  return(mmP)
+}
+
+Portfolio.Moments.Mat = function(w,mm_factor,mm_eps,A){
+
+  m2f = mm_factor[[1]];
+  m3f = mm_factor[[2]];
+  c4f = mm_factor[[3]];
+
+  m2e = mm_eps[[1]];
+  m3e = mm_eps[[2]];
+  m4e = mm_eps[[3]];
+
+  B = t(w)%*%A
+
+  #M2
+  m2P = B%*%m2f%*%t(B) + sum((w^2)*m2e);
+  #M3
+  m3P = B%*%m3f%*%(t(B)%x%t(B))+ sum((w^3)*m3e);
+  #M4
+  m4P = B%*%c4f%*%(t(B)%x%t(B)%x%t(B)) + sum((w^4)*(m4e-3*m2e^2)) + 3*m2P^2;
+
   mmP = c(m2P,m3P,m4P)
   return(mmP)
 }
