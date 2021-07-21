@@ -6,7 +6,7 @@ median <- stats::median
 rnorm  <- stats::rnorm
 runif  <- stats::runif
 
-mm<-function(h,u,sigma,lambda,p,q)
+mm.sgt <- function(h,u,sigma,lambda,p,q)
   ###input interpretation###
   #h: h-th order moment
   #(u,sigma,lambda,p,q): SGT parameters
@@ -142,7 +142,7 @@ EST_sgt = function(skew,kurt,theta)
   lambda =  theta[1]
   p    =  theta[2]
   q    =  theta[3]
-  SSE = (mm(3,0,1,lambda,p,q) - skew)^2 + (mm(4,0,1,lambda,p,q) - kurt)^2
+  SSE = (mm.sgt(3,0,1,lambda,p,q) - skew)^2 + (mm.sgt(4,0,1,lambda,p,q) - kurt)^2
   return(SSE)
 }
 
