@@ -26,6 +26,8 @@ M4.gmm(
 
 \item{initial}{The method used to initialize the factor loadings and the moments of error. \code{PCA} denotes Principal Component Analysis and \code{MLE} denotes Maximum Likelihood Estimation in Bai and Li(2012).}
 
+\item{skewness}{Logical. If \code{TRUE}, the skewness moment structure equations will be used.}
+
 \item{W_diag}{Logical. If \code{TRUE}, the weight matrix \code{W} only has nonzero diagonal elements, default to \code{FALSE}.}
 
 \item{identity}{Logical. If \code{TRUE}, the moments of errors are unified to identity, default to \code{FALSE}.}

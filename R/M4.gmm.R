@@ -4,6 +4,7 @@
 #' @param r The number of factors.
 #' @param kappa An integer. The weight between \code{M} and \code{VWV}, \code{M} denotes the covariance matrix and \code{VWV} denotes the GMM matrix. \code{kappa} default to 0.
 #' @param initial The method used to initialize the factor loadings and the moments of error. \code{PCA} denotes Principal Component Analysis and \code{MLE} denotes Maximum Likelihood Estimation in Bai and Li(2012).
+#' @param skewness Logical. If \code{TRUE}, the skewness moment structure equations will be used.
 #' @param W_diag Logical. If \code{TRUE}, the weight matrix \code{W} only has nonzero diagonal elements, default to \code{FALSE}.
 #' @param identity Logical. If \code{TRUE}, the moments of errors are unified to identity, default to \code{FALSE}.
 #' @param delta An integer. The hard threshold value of \code{W} matrix in order to guarantee non-singularity of \code{W}, default to 1/log(t).
@@ -40,8 +41,9 @@ M4.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),skewness = FALSE,W_dia
   Mx = cov(X1)
 
   #PCA
-  u_pca = eigen(Mx)$vectors[,1:r]
-  f_pca = X1%*%u_pca
+  d_pca = eigen(Mx)$values[1:r]/n
+  u_pca = eigen(Mx)$vectors[,1:r]%*%diag(sqrt(d_pca),r,r)*sqrt(n)
+  f_pca = X1%*%u_pca%*%diag(1/sqrt(d_pca),r,r)/n
   c_pca = f_pca%*%t(u_pca)
   e_pca = X1 - c_pca
 
@@ -53,44 +55,23 @@ M4.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),skewness = FALSE,W_dia
   }
   #use MLE to initialize sigma_e
   if(initial == "MLE"){
-    B_k = u_pca
-    Me_k = diag(diag(cov(e_pca)),n,n)
-    theta_k = cbind(B_k,Me_k)
-    bias = 1
-    iter = 1
-    while ( bias > eps ){
-      B_k =  theta_k[,1:r]
-      Me_k = theta_k[,(r+1):(r+n)]
+    B_k = u_pca #initialize
+    m2e =  as.matrix(diag(cov(e_pca)*(t-1)/t))
 
-      Mx_k = B_k%*%t(B_k) + Me_k
-
-      EFF = t(B_k)%*%solve(Mx_k)%*%Mx%*%solve(Mx_k)%*%B_k + diag(1,r,r) - t(B_k)%*%solve(Mx_k)%*%B_k
-      EZF = Mx%*%solve(Mx_k)%*%B_k
-
-      B_kk = EZF%*%solve(EFF)
-      Me_kk = diag(diag(Mx-B_kk%*%t(B_k)%*%solve(Mx_k)%*%Mx),n,n)
-
-      theta_kk = cbind(B_kk,Me_kk)
-
-      bias = sum((theta_kk-theta_k)^2)
-
-      theta_k = theta_kk
-      iter = iter + 1
-    }
+    theta_k = hofa::MLE_BL_cpp(r = r,eps = sqrt(eps),Mx = Mx,Bk = B_k,M2E = m2e)
 
     u_inl =  theta_k[,1:r]
-    Me_inl = theta_k[,(r+1):(r+n)]
+    Me_inl = diag(theta_k[,r+1])
     f_inl = t(solve(t(u_inl)%*%diag(1/diag(Me_inl))%*%u_inl)%*%t(u_inl)%*%diag(1/diag(Me_inl))%*%t(X1))
     c_inl = f_inl%*%t(u_inl)
     e_inl = X1 - c_inl
 
     ev_inl = eigen(t(c_inl)%*%c_inl/t)
-    ev_inl_id = ev_inl$values
 
     u_inl_id = ev_inl$vectors[,1:r]
     sigma_id = diag(Me_inl)
     sk_id = colMeans(e_inl^3)
-    kt_id = colMeans(e_inl^4) - 3*sigma_id^2
+    kt_id = colMeans(e_inl^4)
   }
 
   sigma_e = sigma_id

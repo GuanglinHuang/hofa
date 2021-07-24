@@ -9,6 +9,10 @@ devtools::install_github("GuanglinHuang/hofa")
 
 **Update log:**
 
+Changes in version 0.8.9
+ - add Portfolio.PC function, implement Lassance and Vrins (2020)'s PC portfolio.
+ - speed up Bai and Li (2012)'s Maximum Likelihood Estimation by C++. The related functions: M2.gmm, M3.gmm, M4.gmm and M2.mle are revised.
+ 
 Changes in version 0.8.8
  - add Portfolio.IC function, implement Lassance and Vrins (2020)'s IC portfolio.
  - fix bugs in functions.R.

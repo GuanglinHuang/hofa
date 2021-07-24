@@ -35,8 +35,9 @@ M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),W_diag = FALSE,identit
   Mx = cov(X1)
 
   #PCA
-  u_pca = eigen(Mx)$vectors[,1:r]
-  f_pca = X1%*%u_pca
+  d_pca = eigen(Mx)$values[1:r]/n
+  u_pca = eigen(Mx)$vectors[,1:r]%*%diag(sqrt(d_pca),r,r)*sqrt(n)
+  f_pca = X1%*%u_pca%*%diag(1/sqrt(d_pca),r,r)/n
   c_pca = f_pca%*%t(u_pca)
   e_pca = X1 - c_pca
 
@@ -50,45 +51,21 @@ M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),W_diag = FALSE,identit
   }
   #use MLE to initialize sigma_e
   if(initial == "MLE"){
-    B_k = u_pca
-    Me_k = diag(diag(cov(e_pca)),n,n)
-    theta_k = cbind(B_k,Me_k)
-    bias = 1
-    iter = 1
-    while ( bias > eps ){
-      B_k =  theta_k[,1:r]
-      Me_k = theta_k[,(r+1):(r+n)]
+    B_k = u_pca #initialize
+    m2e =  as.matrix(diag(cov(e_pca)*(t-1)/t))
 
-      Mx_k = B_k%*%t(B_k) + Me_k
-
-      EFF = t(B_k)%*%solve(Mx_k)%*%Mx%*%solve(Mx_k)%*%B_k + diag(1,r,r) - t(B_k)%*%solve(Mx_k)%*%B_k
-      EZF = Mx%*%solve(Mx_k)%*%B_k
-
-      B_kk = EZF%*%solve(EFF)
-      Me_kk = diag(diag(Mx-B_kk%*%t(B_k)%*%solve(Mx_k)%*%Mx),n,n)
-
-      theta_kk = cbind(B_kk,Me_kk)
-
-      bias = sum((theta_kk-theta_k)^2)
-
-      theta_k = theta_kk
-      iter = iter + 1
-    }
+    theta_k = hofa::MLE_BL_cpp(r = r,eps = sqrt(eps),Mx = Mx,Bk = B_k,M2E = m2e)
 
     u_inl =  theta_k[,1:r]
-    Me_inl = theta_k[,(r+1):(r+n)]
+    Me_inl = diag(theta_k[,r+1])
     f_inl = t(solve(t(u_inl)%*%diag(1/diag(Me_inl))%*%u_inl)%*%t(u_inl)%*%diag(1/diag(Me_inl))%*%t(X1))
     c_inl = f_inl%*%t(u_inl)
     e_inl = X1 - c_inl
 
     ev_inl = eigen(t(c_inl)%*%c_inl/t)
-    ev_inl_id = ev_inl$values
+
     u_inl_id = ev_inl$vectors[,1:r]
-    f_inl_id = c_inl%*%u_inl_id
     sigma_id = diag(Me_inl)
-    if(r == 1){
-      sk_f = mean(f_inl_id^3)
-    }else{sk_f = colMeans(f_inl_id^3)}
     sk_id = colMeans(e_inl^3)
   }
 

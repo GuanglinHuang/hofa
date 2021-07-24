@@ -36,15 +36,16 @@ M2.mle = function(X,r,scale = F,method = c("ML","QML","ML-GLS","ML-ITE","ML-EM")
   n = NCOL(X)
   t = NROW(X)
   X1 = scale(X,scale = scale)
-  Mx = cov(X1)
+  Mx = cov(X1)*(t-1)/t
 
   #PCA
-  u_pca = eigen(Mx)$vectors[,1:r]*sqrt(n)
-  f_pca = X1%*%u_pca/n
+  d_pca = eigen(Mx)$values[1:r]/n
+  u_pca = eigen(Mx)$vectors[,1:r]%*%diag(sqrt(d_pca),r,r)*sqrt(n)
+  f_pca = X1%*%u_pca%*%diag(1/sqrt(d_pca),r,r)/n
   c_pca = f_pca%*%t(u_pca)
   e_pca = X1 - c_pca
-  m2e_pca = diag(diag(cov(e_pca)),n,n)
-  m2_pca = cov(c_pca) + m2e_pca
+  m2e_pca = diag(diag(cov(e_pca)*(t-1)/t),n,n)
+  m2_pca = cov(c_pca)*(t-1)/t + m2e_pca
 
   u_pca = as.matrix(u_pca)
   f_pca = as.matrix(f_pca)
@@ -53,32 +54,12 @@ M2.mle = function(X,r,scale = F,method = c("ML","QML","ML-GLS","ML-ITE","ML-EM")
   #ML
   if(method == "ML"||method == "QML"||method == "ML-GLS"||method == "ML-ITE"||method == "ML-EM"){
     B_k = u_pca #initialize
-    Me_k = m2e_pca
-    theta_k = cbind(B_k,Me_k)
-    bias = 1
-    iter = 1
-    while ( bias > eps ){
-      B_k =  theta_k[,1:r]
-      Me_k = theta_k[,(r+1):(r+n)]
+    m2e =  as.matrix(diag(m2e_pca))
 
-      Mx_k = B_k%*%t(B_k) + Me_k
-
-      EFF = t(B_k)%*%solve(Mx_k)%*%Mx%*%solve(Mx_k)%*%B_k + diag(1,r,r) - t(B_k)%*%solve(Mx_k)%*%B_k
-      EZF = Mx%*%solve(Mx_k)%*%B_k
-
-      B_kk = EZF%*%solve(EFF)
-      Me_kk = diag(diag(Mx-B_kk%*%t(B_k)%*%solve(Mx_k)%*%Mx),n,n)
-
-      theta_kk = cbind(B_kk,Me_kk)
-
-      bias = sum((theta_kk-theta_k)^2)
-
-      theta_k = theta_kk
-      iter = iter + 1
-    }
+    theta_k = hofa::MLE_BL_cpp(r = r,eps = sqrt(eps),Mx = Mx,Bk = B_k,M2E = m2e)
 
     u_ml =  theta_k[,1:r]
-    Me_ml = theta_k[,(r+1):(r+n)]
+    Me_ml = diag(theta_k[,r+1])
     f_ml = t(solve(t(u_ml)%*%diag(1/diag(Me_ml))%*%u_ml)%*%t(u_ml)%*%diag(1/diag(Me_ml))%*%t(X1))
     e_ml = X1 - f_ml%*%t(u_ml)
     m2_ml = u_ml%*%t(u_ml) + Me_ml
