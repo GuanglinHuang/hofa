@@ -11,7 +11,8 @@
 #' @param gamma The risk averse parameter of CRRA utility function (only need when \code{Port_obj="EU"}), default to \code{gamma = 10}.
 #' @param Adjcov The correction method of covariance matrix: "\code{DNL}", Lodit and Wolf(2018)'s Direct NonLinear shrinkage estimation; "\code{LI}", Lodit and Wolf(2004)'s Linear Identity shrinkage estimation;
 #' "\code{NONE}", no correction of the covariance matrix.
-#' @param shortselling A logical parameter: whether the portfolio is allowed to shortselling, defalut to \code{T}.
+#' @param shortselling A logical parameter: whether the portfolio is allowed to shortselling, defalut to \code{TRUE}.
+#' @param ... Any other parameters.
 #' @return A list contains the optimal portfolio weight, the objective function value, the number of factors, the moments of factors and the moments of epsilon.
 #'
 #' \itemize{
