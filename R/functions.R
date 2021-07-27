@@ -40,6 +40,20 @@ CUM <- function(X,...)
   return(cum)
 }
 
+C4toM4 <- function(C4,m2,...)
+{
+  n = NCOL(m2)
+  M4 <- C4 + t(c(m2))%x%m2 + matrix((m2)%x%(m2),n,n^3) + m2%x%t(c(m2))
+  return(M4)
+}
+
+M4toC4 <- function(M4,m2,...)
+{
+  n = NCOL(m2)
+  C4 <- M4 - t(c(m2))%x%m2 - matrix((m2)%x%(m2),n,n^3) - m2%x%t(c(m2))
+  return(C4)
+}
+
 M2M <- function(X)
   ###input interpretation###
   #X: a TxN matrix
