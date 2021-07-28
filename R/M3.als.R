@@ -9,11 +9,13 @@
 #' @param ... Any other parameters.
 #' @return Estimated factors, factor loadings and errors.
 #' @examples
-#' n = 100;t = 200;k = 2;
-#' par_f = c(0.5,0,2,2,Inf,Inf);
-#' par_e = c(1,0,2,Inf,0,0,0);
-#' rho_ar = c(0.5,0.2);
-#' data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X;
+#' n = 100
+#' t = 200
+#' k = 2
+#' par_f = c(0.5,0,2,2,Inf,Inf)
+#' par_e = c(1,0,2,Inf,0,0,0)
+#' rho_ar = c(0.5,0.2)
+#' data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X
 #' M3.als(data,rh = 1, rg = 1)
 
 M3.als = function(X,scale = FALSE,gamma = NULL,rh,rg,eps = 10^-8,...){

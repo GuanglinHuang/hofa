@@ -57,6 +57,6 @@ An implementation of the portfolio weight optimization through parsimonious high
 Lassance and Vrins (2020) - Portfolio selection with parsimonious higher comoments estimation.
 }
 \examples{
-data(sp500);
-Result = Portfolio.IC(sp500,fn_sel = "IC3",Port_obj = "MVaR",Adjcov = "DNL");
+data(sp500)
+Result = Portfolio.IC(sp500,fn_sel = "IC3",Port_obj = "MVaR",Adjcov = "NONE")
 }

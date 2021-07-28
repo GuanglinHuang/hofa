@@ -19,15 +19,15 @@
 #' }
 #' @examples
 #' n = 100;t = 10;d = 1;r = 3;
-#' g1 = function(x){x^3-2*x};
-#' g2 = function(x){x^2-1};
-#' g3 = function(x){x};
-#' C = matrix(rnorm(n*d),n,d);W = matrix(NA,n,r);
-#' W[,1] <- g1(C);W[,2] <- g2(C);W[,3] <- g3(C);
-#' FF = matrix(rnorm(t*r),t,r);
-#' EE = matrix(rnorm(t*n),t,n);
-#' X = W%*%t(FF) + t(EE);
-#' M2.pca(t(X),C = C,r,method = "P-PCA",J = 4);
+#' g1 = function(x){x^3-2*x}
+#' g2 = function(x){x^2-1}
+#' g3 = function(x){x}
+#' C = matrix(rnorm(n*d),n,d);W = matrix(NA,n,r)
+#' W[,1] <- g1(C);W[,2] <- g2(C);W[,3] <- g3(C)
+#' FF = matrix(rnorm(t*r),t,r)
+#' EE = matrix(rnorm(t*n),t,n)
+#' X = W%*%t(FF) + t(EE)
+#' M2.pca(t(X),C = C,r,method = "P-PCA",J = 4)
 
 
 

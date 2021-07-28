@@ -44,10 +44,12 @@ A list of factors, factor loadings and other information, see below.
 Estimating the latent factors and factor loadings in high dimensional factor model using maximum likelihood methods based on the covariance or correlation matrix.
 }
 \examples{
-n = 100;t = 200;k = 2;
-par_f = c(0.5,0,2,2,Inf,Inf);
-par_e = c(1,0,2,Inf,0,0,0);
-rho_ar = c(0.5,0.2);
-data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X;
-M2.mle(data,r = 2,method = "ML-EM");
+n = 100
+t = 200
+k = 2
+par_f = c(0.5,0,2,2,Inf,Inf)
+par_e = c(1,0,2,Inf,0,0,0)
+rho_ar = c(0.5,0.2)
+data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X
+M2.mle(data,r = 2,method = "ML-EM")
 }

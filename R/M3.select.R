@@ -9,11 +9,13 @@
 #' @param ... Any other parameters.
 #' @return The number of non-Gaussian and Gaussian factors determined by selected approach.
 #' @examples
-#' n = 100;t = 200;k = 2;
-#' par_f = c(0.5,0,2,2,Inf,Inf);
-#' par_e = c(1,0,2,Inf,0,0,0);
-#' rho_ar = c(0.5,0.2);
-#' data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X;
+#' n = 100
+#' t = 200
+#' k = 2
+#' par_f = c(0.5,0,2,2,Inf,Inf)
+#' par_e = c(1,0,2,Inf,0,0,0)
+#' rho_ar = c(0.5,0.2)
+#' data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X
 #' M3.select(data,method = "GER3")
 
 M3.select = function(X,scale = F,rmax = 8,method = c("GER3","GGR3","JJR3"),

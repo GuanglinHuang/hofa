@@ -24,8 +24,8 @@
 #'   \item{\code{mm_portfolio}}{ The optimal moments of portfolio.}
 #' }
 #' @examples
-#' data(sp500);
-#' Result = Portfolio.IC(sp500,fn_sel = "IC3",Port_obj = "MVaR",Adjcov = "DNL");
+#' data(sp500)
+#' Result = Portfolio.IC(sp500,fn_sel = "IC3",Port_obj = "MVaR",Adjcov = "NONE")
 
 
 Portfolio.IC = function(X,r = NULL,rmax = 10,fn_sel = c("ER","GR","IC3","ED"),
