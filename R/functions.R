@@ -57,7 +57,7 @@ CUM <- function(X,...)
     n = length(X[1,])
     t = length(X[,1])
     m2 <- (t-1)/t*cov(X)
-    cum<- PerformanceAnalytics::M4.MM(X) - t(c(m2))%x%m2 - matrix((m2)%x%(m2),n,n^3) - m2%x%t(c(m2))}
+    cum<- MC4smaple(X,m2,n,t)}
   return(cum)
 }
 

@@ -11,6 +11,20 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// MC4smaple
+SEXP MC4smaple(SEXP XX, SEXP MM2, SEXP NN, SEXP TT);
+RcppExport SEXP _hofa_MC4smaple(SEXP XXSEXP, SEXP MM2SEXP, SEXP NNSEXP, SEXP TTSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type XX(XXSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type MM2(MM2SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type NN(NNSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type TT(TTSEXP);
+    rcpp_result_gen = Rcpp::wrap(MC4smaple(XX, MM2, NN, TT));
+    return rcpp_result_gen;
+END_RCPP
+}
 // MLE_BL_cpp
 arma::mat MLE_BL_cpp(int r, double eps, arma::mat Mx, arma::mat Bk, arma::mat M2E);
 RcppExport SEXP _hofa_MLE_BL_cpp(SEXP rSEXP, SEXP epsSEXP, SEXP MxSEXP, SEXP BkSEXP, SEXP M2ESEXP) {
@@ -28,6 +42,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_hofa_MC4smaple", (DL_FUNC) &_hofa_MC4smaple, 4},
     {"_hofa_MLE_BL_cpp", (DL_FUNC) &_hofa_MLE_BL_cpp, 5},
     {NULL, NULL, 0}
 };
