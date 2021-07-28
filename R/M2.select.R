@@ -10,11 +10,13 @@
 #' @param ... Any other parameters.
 #' @return The number of factors determined by selected approach and the eigenvalues of the covariance matrix.
 #' @examples
-#' n = 100;t = 200;k = 2;
-#' par_f = c(0.5,0,2,2,Inf,Inf);
-#' par_e = c(1,0,2,Inf,0,0,0);
-#' rho_ar = c(0.5,0.2);
-#' data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X;
+#' n = 100
+#' t = 200
+#' k = 2
+#' par_f = c(0.5,0,2,2,Inf,Inf)
+#' par_e = c(1,0,2,Inf,0,0,0)
+#' rho_ar = c(0.5,0.2)
+#' data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X
 #' M2.select(data,method = "ER")
 
 M2.select = function(X,scale = F,rmax = 8,
@@ -136,7 +138,7 @@ M2.select = function(X,scale = F,rmax = 8,
     lambdaZ = eigen(cor2)$values;
     ev2 = lambdaZ
     DD=NULL; lambdaLY=lambdaZ;
-    pp=rmax+2; mz=rep(0,pp); dmz=mz; tmz=mz
+    pp=kmax+2; mz=rep(0,pp); dmz=mz; tmz=mz
     for (kk in 1:pp){
     qu=3/4
     lambdaZ1=lambdaZ[-seq(max(0, 1),kk,1)]; z0=qu*lambdaZ[kk]+(1-qu)*lambdaZ[kk+1]
@@ -146,11 +148,11 @@ M2.select = function(X,scale = F,rmax = 8,
     }
 
     tempn=(-1/mz)[-1]-1-sqrt(n/(t-1));
-    temp1=seq(1,rmax,1);
-    temp2=cbind(temp1,tempn[1:rmax])
+    temp1=seq(1,kmax,1);
+    temp2=cbind(temp1,tempn[1:kmax])
     ACT = max((temp2[,1][temp2[,2]>0]),0)+1
 
-    FN = ACT
+    FN = min(ACT,kmax)
   }
 
   return(list(R = FN, eigenvalues = ev2))

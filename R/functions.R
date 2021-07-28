@@ -26,6 +26,27 @@ mm.sgt <- function(h,u,sigma,lambda,p,q)
   return(summm)
 }
 
+SuperDiag = function(x,k){
+  n = length(x)
+  if(k==2){
+    return(diag(x,n,n))
+  }
+  if(k == 3){
+    mat = matrix(0,n,n^2)
+    for (i in 1:n) {
+      mat[i,i + (i-1)*n] <- x[i]
+    }
+    return(mat)
+  }
+  if(k == 4){
+    mat = matrix(0,n,n^3)
+    for (i in 1:n) {
+      mat[i,i + (i-1)*n + (i-1)*n^2] <- x[i]
+    }
+    return(mat)
+  }
+}
+
 CUM <- function(X,...)
   ###input interpretation###
   #X: a TxN matrix
@@ -84,6 +105,7 @@ C4M <- function(X,m2)
   #m2: covariance of X
   {
   t = NROW(X)
+  X = scale(X,scale = F)
   M4 = M4M(X)/t^2
   a = apply(X, 1, function(x){sum((x%x%x)*c(m2))})
   b = matrix(a,t,t)
@@ -185,7 +207,7 @@ Portfolio.Moments = function(w,mm_factor,mm_eps,A){
 
   m4P = sum(B^4*(m4f-3*m2f^2)) + sum((w^4)*(m4e-3*m2e^2)) + 3*m2P^2;
 
-  # m4P = sum(B^4*m4f) + 3*sum(t(B^2)%*%(B^2) - diag(diag(t(B^2)%*%(B^2)))) + sum((w^4)*m4e) + 3*sum((w^2*m2e)%*%t(w^2*m2e) - diag(diag((w^2*m2e)%*%t(w^2*m2e)))) + 6*sum((B^2)*m2f)*sum(w^2*m2e)
+  #m4P = sum(B^4*m4f) + 3*sum(t(B^2)%*%(B^2) - diag(diag(t(B^2)%*%(B^2)))) + sum((w^4)*m4e) + 3*sum((w^2*m2e)%*%t(w^2*m2e) - diag(diag((w^2*m2e)%*%t(w^2*m2e)))) + 6*sum((B^2)*m2f)*sum(w^2*m2e)
 
   mmP = c(m2P,m3P,m4P)
   return(mmP)
@@ -263,13 +285,11 @@ DNLshrink = function(X,k = 1,...){
   S = cov(X)*(n-1)/n
   lambda = eigen(S)$values
 
-
   ts = which(lambda < 10^(-8))
   if(length(ts)>0){
     lambda[ts] <- lambda[min(ts) - 1]
   }
   u = eigen(S)$vectors
-
 
   #compute direct kernel estimator
   lambda = lambda[max(1,p-n+1):p]
@@ -316,8 +336,7 @@ LIshrink = function (X, k = 0){
   Ip <- diag(p)
   m <- sum(S * Ip)/p
   d2 <- sum((S - m * Ip)^2)/p
-  b_bar2 <- 1/(p * effn^2) * sum(apply(X, 1, function(x) sum((tcrossprod(x) -
-                                                                S)^2)))
+  b_bar2 <- 1/(p * effn^2) * sum(apply(X, 1, function(x) sum((tcrossprod(x)-S)^2)))
   b2 <- min(d2, b_bar2)
   a2 <- d2 - b2
   return(b2/d2 * m * Ip + a2/d2 * S)
