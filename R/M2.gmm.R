@@ -3,7 +3,7 @@
 #' @param X A matrix or data frame with t rows (samples) and n columns (variables).
 #' @param r The number of factors.
 #' @param kappa An integer. The weight between \code{M} and \code{VWV}, \code{M} denotes the covariance matrix and \code{VWV} denotes the GMM matrix. \code{kappa} default to 0.
-#' @param sigma A \code{n x 1} vector, the variance of the error terms. If it is \code{NULL}, the variance vector will be initialized by PCA or MLE.
+#' @param sigma_e A \code{n x 1} vector, the variance of the error terms. If it is \code{NULL}, the variance vector will be initialized by PCA or MLE.
 #' @param initial The method used to initialize the factor loadings and the variance of errors. \code{PCA} denotes Principal Component Analysis and \code{MLE} denotes Maximum Likelihood Estimation in Bai and Li(2012).
 #' @param W_diag Logical. If \code{TRUE}, the weight matrix \code{W} only has nonzero diagonal elements, default to \code{FALSE}.
 #' @param identity Logical. If \code{TRUE}, the variances of errors are unified to identity, default to \code{FALSE}.
@@ -25,12 +25,13 @@
 #' par_e = c(1,0,2,Inf,0,0,0)
 #' rho_ar = c(0.5,0.2)
 #' data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X
-#' M2.gmm(data,r = 2,kappa = 0,sigma = rep(1,n),initial = "PCA")
+#' M2.gmm(data,r = 2,kappa = 0,sigma_e = rep(1,n),initial = "PCA")
 
-M2.gmm <- function(X,r,kappa = 0,sigma = NULL,initial = c("PCA","MLE"),W_diag = FALSE,identity = FALSE,delta = NULL,eps = 10^-6,...){
+M2.gmm <- function(X,r,kappa = 0,sigma_e = NULL,initial = c("PCA","MLE"),W_diag = FALSE,identity = FALSE,delta = NULL,eps = 10^-6,...){
 
   n = NCOL(X)
   t = NROW(X)
+  X = as.matrix(X)
 
   m = n + 1
   X1 = scale(X,scale = FALSE)
@@ -66,8 +67,8 @@ M2.gmm <- function(X,r,kappa = 0,sigma = NULL,initial = c("PCA","MLE"),W_diag = 
   }
 
 
-  if(is.null(sigma)){
-    sigma = sigma_id
+  if(is.null(sigma_e)){
+    sigma_e = sigma_id
   }
 
   if(identity == T){
@@ -78,12 +79,12 @@ M2.gmm <- function(X,r,kappa = 0,sigma = NULL,initial = c("PCA","MLE"),W_diag = 
   #m1
   v1 = colMeans(X)
   #m2
-  v2 = t(X1)%*%X1/t - diag(sigma)
+  v2 = t(X1)%*%X1/t - diag(sigma_e)
 
   W_sol = matrix(0,m,m)
   for (tt in 1:t) {
-      v1_i = X[tt,]
-      v2_i = X1[tt,]%*%t(X1[tt,]) - diag(sigma)
+      v1_i = as.matrix(X[tt,])
+      v2_i = X1[tt,]%*%t(X1[tt,]) - diag(sigma_e)
       V_i = cbind(v1_i,v2_i)
 
       W_sol = W_sol + t(V_i)%*%(diag(n) - u_inl_id%*%t(u_inl_id))%*%V_i
@@ -108,10 +109,10 @@ M2.gmm <- function(X,r,kappa = 0,sigma = NULL,initial = c("PCA","MLE"),W_diag = 
   eig_gmm =  eigen(kappa*t(X)%*%X/t + V%*%WW%*%t(V))
 
   uv_gmm = as.numeric(eig_gmm$vectors[,1:r])
-  u_gmm = matrix(uv_gmm,n,r)
+  u_gmm = matrix(uv_gmm,n,r)*sqrt(n)
   ev_gmm = (as.numeric(eig_gmm$values))[1:(min(n,t))]
 
-  f_gmm = X%*%u_gmm
+  f_gmm = X%*%u_gmm/n
 
   e_gmm = X - f_gmm%*%t(u_gmm)
 

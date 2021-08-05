@@ -31,6 +31,7 @@ M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),W_diag = FALSE,identit
 
   n = NCOL(X)
   t = NROW(X)
+  X = as.matrix(X)
 
   m = n + n + 1
   X1 = scale(X,scale = FALSE)
@@ -120,10 +121,10 @@ M3.gmm <- function(X,r,kappa = 0,initial = c("PCA","MLE"),W_diag = FALSE,identit
   eig_gmm =  eigen(kappa*t(X)%*%X/t + V%*%WW%*%t(V))
 
   uv_gmm = as.numeric(eig_gmm$vectors[,1:r])
-  u_gmm = matrix(uv_gmm,n,r)
+  u_gmm = matrix(uv_gmm,n,r)*sqrt(n)
   ev_gmm = (as.numeric(eig_gmm$values))[1:(min(n,t))]
 
-  f_gmm = X%*%u_gmm
+  f_gmm = X%*%u_gmm/n
 
   e_gmm = X - f_gmm%*%t(u_gmm)
 

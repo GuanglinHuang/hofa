@@ -8,7 +8,7 @@ M2.gmm(
   X,
   r,
   kappa = 0,
-  sigma = NULL,
+  sigma_e = NULL,
   initial = c("PCA", "MLE"),
   W_diag = FALSE,
   identity = FALSE,
@@ -24,7 +24,7 @@ M2.gmm(
 
 \item{kappa}{An integer. The weight between \code{M} and \code{VWV}, \code{M} denotes the covariance matrix and \code{VWV} denotes the GMM matrix. \code{kappa} default to 0.}
 
-\item{sigma}{A \code{n x 1} vector, the variance of the error terms. If it is \code{NULL}, the variance vector will be initialized by PCA or MLE.}
+\item{sigma_e}{A \code{n x 1} vector, the variance of the error terms. If it is \code{NULL}, the variance vector will be initialized by PCA or MLE.}
 
 \item{initial}{The method used to initialize the factor loadings and the variance of errors. \code{PCA} denotes Principal Component Analysis and \code{MLE} denotes Maximum Likelihood Estimation in Bai and Li(2012).}
 
@@ -58,5 +58,5 @@ par_f = c(0.5,0,2,2,Inf,Inf)
 par_e = c(1,0,2,Inf,0,0,0)
 rho_ar = c(0.5,0.2)
 data = hofa.sim(n,t,k,par_f,par_e,rho_ar)$X
-M2.gmm(data,r = 2,kappa = 0,sigma = rep(1,n),initial = "PCA")
+M2.gmm(data,r = 2,kappa = 0,sigma_e = rep(1,n),initial = "PCA")
 }
