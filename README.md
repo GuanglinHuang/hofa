@@ -9,6 +9,13 @@ devtools::install_github("GuanglinHuang/hofa")
 
 **Update log:**
 
+Changes in version 0.9.1
+ - unit tests for M2.mle, M2.pca, M2.gmm, M3.gmm, M3.als, M4.als, Portfolio.IC and 
+ Portfolio.PC functions.
+ - remove M4.gmm functions, leave it as a future work.
+ - fix bugs in M2.gmm and M3.gmm functions.
+ 
+ 
 Changes in version 0.9.0
  - speed up CUM function by C++.
  - more unit tests of functions.R.
