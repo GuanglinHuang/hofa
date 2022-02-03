@@ -13,7 +13,7 @@ Imports:
     PerformanceAnalytics,
     ica,
     Iso,
-    Rsolnp2,
+    Rsolnp,
     pkgcond,
     dlm,
     gam,
