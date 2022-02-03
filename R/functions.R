@@ -213,6 +213,25 @@ Portfolio.Moments = function(w,mm_factor,mm_eps,A){
   return(mmP)
 }
 
+Portfolio.Moments.GARCHSK = function(w,mm_factor,A){
+
+  m2f = mm_factor[[1]];
+  m3f = mm_factor[[2]];
+  m4f = mm_factor[[3]];
+
+  B = t(w)%*%A
+
+  #M2
+  m2P = sum((B^2)*m2f);
+  #M3
+  m3P = sum((B^3)*m3f);
+  #M4
+  m4P = sum((B^4)*m4f);
+
+  mmP = c(m2P,m3P,m4P)
+  return(mmP)
+}
+
 Portfolio.Moments.Mat = function(w,mm_factor,mm_eps,A){
 
   m2f = mm_factor[[1]];

@@ -159,7 +159,7 @@ Portfolio.IC = function(X,r = NULL,rmax = 10,fn_sel = c("ER","GR","IC3","ED"),
       obj = Obj.MVaR(mmP,alpha = alpha);
       return(obj)
       }
-    rsol = pkgcond::suppress_conditions(Rsolnp2::solnp2(par = rep(1/n,n),fun = fun_obj,eqfun = function(x){sum(x)},eqB = 1,LB = rep(lb,n),UB = rep(1,n)))
+    rsol = pkgcond::suppress_conditions(Rsolnp::solnp(pars = rep(1/n,n),fun = fun_obj,eqfun = function(x){sum(x)},eqB = 1,LB = rep(lb,n),UB = rep(1,n)))
   }
 
   if(Port_obj == "EU"){
@@ -167,7 +167,7 @@ Portfolio.IC = function(X,r = NULL,rmax = 10,fn_sel = c("ER","GR","IC3","ED"),
       mmP = Portfolio.Moments(z,mm_factor = mmf,mm_eps = mme,A = A)
       obj = Obj.EU(mmP,gamma = gamma);return(obj)
       }
-    rsol = pkgcond::suppress_conditions(Rsolnp2::solnp2(par = rep(1/n,n),fun = fun_obj,eqfun = function(x){sum(x)},eqB = 1,LB = rep(lb,n),UB = rep(1,n)))
+    rsol = pkgcond::suppress_conditions(Rsolnp::solnp(pars = rep(1/n,n),fun = fun_obj,eqfun = function(x){sum(x)},eqB = 1,LB = rep(lb,n),UB = rep(1,n)))
   }
   w.opt = rsol$pars
   w.opt = w.opt/sum(w.opt)
