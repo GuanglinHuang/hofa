@@ -14,7 +14,7 @@ test_that("hofa.DGP1 test", {
   alpha = 0
   data = hofa::hofa.DGP1(n,t,k,par_f,par_e,alpha,rho_f,rho_e = 0.2)
 
-  expect_equal(svd(data$X)$d[1],211.711820268,tolerance = 10^-6)
+  expect_equal(svd(data$X)$d[1],210.3615,tolerance = 10^-6)
 
 })
 
