@@ -8,7 +8,7 @@ test_that("Portoflio.IC test", {
   n = NCOL(X)
   result_ic = hofa::Portfolio.IC(X,r=20,Port_obj = "EU",Adjcov = "LI")
 
-  expect_equal(tail(result_ic$obj,1),5.674888,tolerance = 10^-6)
+  expect_equal(tail(result_ic$obj,1),5.67488795465,tolerance = 10^-6)
 
 })
 
@@ -20,6 +20,6 @@ test_that("Portoflio.PC test", {
   n = NCOL(X)
   result_pc = hofa::Portfolio.PC(X,r=20,Port_obj = "EU",Adjcov = "LI")
 
-  expect_equal(tail(result_pc$obj,1),5.865482,tolerance = 10^-6)
+  expect_equal(tail(result_pc$obj,1),5.86548178441,tolerance = 10^-6)
 
 })

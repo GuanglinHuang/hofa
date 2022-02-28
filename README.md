@@ -31,6 +31,8 @@ The third part of the project is about portfolio selection based on the higher-o
 
 
 **Update log:**
+Changes in version 0.9.2
+ - rewrite the simulated data function.
 
 Changes in version 0.9.1
  - unit tests for M2.mle, M2.pca, M2.gmm, M3.gmm, M3.als, M4.als, Portfolio.IC and 
