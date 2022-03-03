@@ -4,7 +4,7 @@
 \alias{hofa.DGP2}
 \title{Generate panel data from [H]igher-[O]rder multi-cumulant [F]actor [A]nalysis of DGP2}
 \usage{
-hofa.DGP2(n, t, k, par_f, par_e, par_cove, rho_f)
+hofa.DGP2(n, t, k, par_f, par_e, par_cove, rho_f, ...)
 }
 \arguments{
 \item{n}{An integer, the number of variables.}

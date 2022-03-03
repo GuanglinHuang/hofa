@@ -360,3 +360,28 @@ LIshrink = function (X, k = 0){
   a2 <- d2 - b2
   return(b2/d2 * m * Ip + a2/d2 * S)
 }
+
+Panel_trans = function(data,type = 1){
+  date = row.names(data)
+  name = colnames(data)
+
+  n = NCOL(data)
+  t = NROW(data)
+
+  panel = vector()
+  if(type == 1){
+    for (i in 1:n) {
+      panel <- rbind(panel,cbind(date,name[i],value[,i]))
+    }
+    panel_frame = data.frame(date = panel[,1],id = panel[,2],value = as.numeric(panel[,3]))
+  }
+  if(type == 2){
+    for (i in 1:n) {
+      panel <- rbind(panel,cbind(name[i],date,value[,i]))
+    }
+    panel_frame = data.frame(id = panel[,1],date = panel[,2],value = as.numeric(panel[,3]))
+  }
+
+  return(panel_frame)
+}
+

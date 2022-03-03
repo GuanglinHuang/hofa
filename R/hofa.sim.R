@@ -20,7 +20,7 @@
 #' alpha = 0
 #' hofa.DGP1(n,t,k,par_f,par_e,alpha,rho_f,rho_e = 0.2)
 
-hofa.DGP1 = function(n,t,k,par_f,par_e,alpha,rho_f,rho_e = 0.2){
+hofa.DGP1 = function(n,t,k,par_f,par_e,alpha,rho_f,rho_e = 0.2,...){
   sig_f <- par_f[[1]]
   lam_f <- par_f[[2]]
   p_f <- par_f[[3]]
@@ -90,7 +90,7 @@ hofa.DGP1 = function(n,t,k,par_f,par_e,alpha,rho_f,rho_e = 0.2){
 #' par_cove = list(beta = 0.2,J = n/10,rho = 0.2,msig_e = c(1,5))
 #' hofa.DGP2(n,t,k,par_f,par_e,par_cove,rho_f)
 
-hofa.DGP2 = function(n,t,k,par_f,par_e,par_cove,rho_f){
+hofa.DGP2 = function(n,t,k,par_f,par_e,par_cove,rho_f,...){
 
   sig_f <- par_f[[1]]
   lam_f <- par_f[[2]]

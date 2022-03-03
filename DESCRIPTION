@@ -1,6 +1,6 @@
 Package: hofa
 Type: Package
-Title: higher-Order multi-cumulant factor analysis
+Title: higher-order multi-cumulant factor analysis
 Version: 0.9.2
 Author: Guanglin Huang
 Maintainer: Guanglin Huang <huang.guanglin@yahoo.com>
