@@ -364,6 +364,7 @@ LIshrink = function (X, k = 0){
 Panel_trans = function(data,type = 1){
   date = row.names(data)
   name = colnames(data)
+  value = data
 
   n = NCOL(data)
   t = NROW(data)
