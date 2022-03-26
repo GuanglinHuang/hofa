@@ -6,7 +6,10 @@ Installing the developer version of the package is possible by
 ```
 devtools::install_github("GuanglinHuang/hofa")
 ```
-**Main works:**
+
+We provide a simulation study of weak factor estimation based on `hofa` on RPubs <https://rpubs.com/guanglin/876536>, the results confirm the usefulness of HFA approach.
+
+**Main works of hofa:**
 
 **Part 1. Factor number selection**
 
