@@ -387,3 +387,24 @@ Panel_trans = function(data,type = 1){
   return(panel_frame)
 }
 
+
+sigma.fnorm = function(m,m0){
+   p = NROW(m)
+   m00 = Mat.k(m0,-1/2,10^-6)
+   sfnorm = fnorm(m00%*%m%*%m00)/sqrt(p)
+   return(sfnorm)
+}
+
+Mat.k = function(A,k,eps = 10^-6){
+  ev = eigen(A)$values
+  mark = which(ev > eps)
+  ev = ev[mark]
+  evc = as.matrix(eigen(A)$vectors)[,mark]
+
+  Matk = evc%*%diag(ev^k)%*%t(evc)
+
+  return(Matk)
+}
+
+
+
