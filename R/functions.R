@@ -255,7 +255,8 @@ Portfolio.Moments.Mat = function(w,mm_factor,mm_eps,A){
   return(mmP)
 }
 
-Obj.MVaR = function(mmP,alpha = 0.01,...){
+Obj.MVaR = function(mmP,alpha = 0.05,...) ###enter moments of portfolio!!
+  {
 
   m2P = mmP[1];
   m3P = mmP[2];
