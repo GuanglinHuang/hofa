@@ -20,7 +20,9 @@
 #' alpha = 0
 #' hofa.DGP1(n,t,k,par_f,par_e,alpha,rho_f,rho_e = 0.2)
 
-hofa.DGP1 = function(n,t,k,par_f,par_e,alpha,rho_f,rho_e = 0.2,...){
+
+
+hofa.DGP1 = function(n,t,k,par_f,par_e,alpha,rho_f,rho = 0.5,theta = 1,rho_e = 0.2,...){
   sig_f <- par_f[[1]]
   lam_f <- par_f[[2]]
   p_f <- par_f[[3]]
@@ -53,9 +55,10 @@ hofa.DGP1 = function(n,t,k,par_f,par_e,alpha,rho_f,rho_e = 0.2,...){
   W  = matrix(rnorm(k*n),n,k)
 
 
-  d = diag(c(runif(round(n^(1 - alpha)),0.9*n^alpha,1.1*n^alpha),runif(n - round(n^(1 - alpha)),0.5,1.5)))
+  d = diag(theta*(1:n)^{-rho})
 
   u = pracma::randortho(n,"orthonormal")
+
   O = u%*%d%*%t(u)
   O_half = sqrt(d)%*%t(u)
 
