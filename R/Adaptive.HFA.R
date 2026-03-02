@@ -84,12 +84,12 @@ Adaptive.HFA = function(X,scale = FALSE, r = NULL, K = 3, tau_NT = NULL){
   res4 = M4.als(X,gamma = c(0,0,1),rh = r,rg = 0)
 
   u2 = res2$u
-  u3 = res2$u
-  u4 = res2$u
+  u3 = res3$u
+  u4 = res4$u
 
   f2 = res2$f
-  f3 = res2$f
-  f4 = res2$f
+  f3 = res3$f
+  f4 = res4$f
 
   if (K != 3 & K != 4) {
     stop("Error: The value of K must be either 3 or 4. You provided K = ", K, ".", call. = FALSE)
