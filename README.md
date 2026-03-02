@@ -2,22 +2,28 @@
 
 This R package implements several factor analysis approaches based on the covariance matrix and the higher-order multi-cumulants, including factor number selection, factor estimation and the applications in financial market.
 
+The code implementation is based on the paper <https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3599632> 
+
+\emph{Huang, G.,Lu, W., and Boudt, K. (2026). Estimation of factors using higher-order multi-cumulants in weak factor models. Available at SSRN 3599632.} 
+
+
+
 Installing the developer version of the package is possible by
 ```
 devtools::install_github("GuanglinHuang/hofa")
 ```
 
 We provide a simulation study of weak factor estimation based on `hofa` on RPubs <https://rpubs.com/guanglin/876536>, the results confirm the usefulness of HFA approach.
-
+ 
 **Main works of hofa:**
 
 **Part 1. Factor number selection**
 
-The first major part of the project is about determining the number of factors, I implement several approaches based on the covariance matrix and the higher-order moments.
+The first major part of the project is about determining the number of factors, We implement several approaches based on the covariance matrix and the higher-order moments.
 
 The covariance-based approaches: Bai and Ng(2002)'s Information Criterion(IC3,PC3 and BIC3), Onatski(2010)'s Empirical Distribution method(ON), Ahn and Horenstein(2013)'s Eigenvalue Ratio test(ER and GR), Fan et al.(2020)'s Adjusted Correlation Threshold method(ACT). These methods are compiled in M2.select function.
 
-The higher-order moment-based approaches: Lu et al.(2021)'s Generalized Eigenvalue Ratio test(GER3,GER4,GGR3 and GGR4), Jondeau et al.(2018)'s Threshold method(JJR).
+The higher-order moment-based approaches: Huang et al.(2026)'s Generalized Eigenvalue Ratio test(GER3,GER4,GGR3 and GGR4), Jondeau et al.(2018)'s Threshold method(JJR).
 These methods are compiled in M3.select and M4.select functions.
 
 **Part 2. Factor estimation**
@@ -26,7 +32,7 @@ The second major part of the project is about factor estimation, I also implemen
 
 The covariance-based approaches contain three parts: Principal Component methods, Maximum Likelihood methods and Generalized Moment methods. The M2.pca function implements classical PCA and Fan et al.(2016)'s Projected PCA(P-PCA). The M2.mle function implements Bai and Li(2012,2013)'s Maximum Likelihood estimation(ML), Quasi Maximum Likelihood estimation(QML), Generalized Least Square algorithm(ML-GLS), Iterative Generalized Least Square algorithm(ML-ITE) and EM algorithm(ML-EM). The M2.gmm function implement Fan and Zhong(2018)'s Generalized Moment Method(GMM). 
 
-The higher-order moment-based approaches: Lu et al.(2021)'s Alternating Least Squares algorithm(M3.als and M4.als), Fan and Zhong(2018)'s Generalized Moment Method (M3.gmm, add third-order moment as structure equations).
+The higher-order moment-based approaches: Huang et al.(2026)'s Alternating Least Squares algorithm(M3.als and M4.als) and Adaptive HFA algorithm(Adaptive.HFA), Fan and Zhong(2018)'s Generalized Moment Method (M3.gmm, add third-order moment as structure equations).
 
 **Part 3. Portfolio selection**
 
