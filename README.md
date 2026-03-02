@@ -35,6 +35,9 @@ The third part of the project is about portfolio selection based on the higher-o
 
 **Update log:**
 
+Changes in version 0.9.4
+ - add Adaptive.HFA function.
+ 
 Changes in version 0.9.3
  - rewrite some functions to match the paper.
 
