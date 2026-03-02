@@ -2,9 +2,9 @@
 
 This R package implements several factor analysis approaches based on the covariance matrix and the higher-order multi-cumulants, including factor number selection, factor estimation and the applications in financial market.
 
-The code implementation is based on the paper <https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3599632> 
+The code implementation is based on the paper (<https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3599632>) 
 
-\emph{Huang, G.,Lu, W., and Boudt, K. (2026). Estimation of factors using higher-order multi-cumulants in weak factor models. Available at SSRN 3599632.} 
+*Huang, G.,Lu, W., and Boudt, K. (2026). Estimation of factors using higher-order multi-cumulants in weak factor models. Available at SSRN 3599632.*
 
 
 
