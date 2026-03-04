@@ -2,6 +2,7 @@
 % Please edit documentation in R/package-description.R
 \docType{package}
 \name{hofa}
+\alias{hofa-package}
 \alias{hofa}
 \title{hofa: Econometric tools for higher-order multi-cumulant factor analysis}
 \description{

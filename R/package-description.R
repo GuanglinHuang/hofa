@@ -21,5 +21,5 @@
 #'
 #' @docType package
 #' @name hofa
-NULL
+"_PACKAGE"
 #> NULL

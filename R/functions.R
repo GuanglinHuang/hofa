@@ -118,10 +118,11 @@ C4M <- function(X,m2)
 
 fnorm  <- function(x){sqrt(sum(x^2))}
 
+#' @noRd
 hofa.lag <- function(X,p){
   c(rep(NA,p),X[1:(length(X)-p)])
 }
-
+#' @noRd
 lag.mat <- function(X,p){
   X.lag = matrix(NA,length(X),p+1)
   for (i in 0:p) {
@@ -387,7 +388,7 @@ Panel_trans = function(data,type = 1){
   return(panel_frame)
 }
 
-
+#' @noRd
 sigma.fnorm = function(m,m0){
    p = NROW(m)
    m00 = Mat.k(m0,-1/2,10^-6)
